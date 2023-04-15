@@ -1,0 +1,232 @@
+###
+GET https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1
+
+//Đăng ký
+POST http://localhost:6868/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "usertest@gmail.com",
+    "password": "123456",
+    "username": "test"
+}
+
+
+//Đăng nhập
+###
+POST http://localhost:6868/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin12345@gmail.com",
+    "password": "123456"
+}
+###
+GET http://localhost:6868/api/auth
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3OTkzMzMyMX0.WsMzyoVbwermRpqjizQFtbPgXwHhaQYE2QLyUtCcwPo
+
+
+
+###
+POST http://localhost:6868/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin1t@gmail.com",
+    "password": "123456"
+}
+
+###
+POST http://localhost:6868/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "user123@gmail.com",
+    "password": "123456"
+}
+
+
+
+
+
+//Cập nhật thông tin người dùng
+###
+PUT http://localhost:6868/api/user/update/27
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlzQWRtaW4iOjAsImlhdCI6MTY3ODgxNDk3N30.6Uf8qp4v22rLF6bNIcQ0bv6rqpVbUq4jTmobZjuJedU
+
+{
+    "username": "Update người khác",
+    "avatar": "123456",
+    "birthday": 2004
+}
+
+
+//Xoá người dùng
+###
+PUT http://localhost:6868/api/user/delete/28
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlzQWRtaW4iOjAsImlhdCI6MTY3ODgxNTMxOX0.DigTVavsIZqRt2oFx6-7OHE7fQ0tm19V353hMXiYpb4
+
+{
+    "deleted": 1
+}
+
+//Get ALL user
+###
+GET http://localhost:6868/api/user/alluser
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+
+
+
+//Xoá người dùng
+###
+POST http://localhost:6868/api/product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+
+{
+    "name": "Samsung S23 Ultra 10", 
+    "description": "S23 ", 
+    "information": "Máy mới 100%", 
+    "status": "Còn hàng", 
+    "img": "https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/v/_/v_ng_18.png", 
+    "star": 5, 
+    "id_owner": 2, 
+    "id_category": 1
+}
+
+//Xoá người dùng
+###
+PUT http://localhost:6868/api/product/update/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODgxNzAwNn0.Uv0hjCyuewE0_eWITKCeKq8AncT6-l0-Ny8Tn752G08
+
+{
+    "name": "iPhone X", 
+    "description": "iPhone 6s", 
+    "information": "Máy mới 100% ", 
+    "status": "Còn hàng", 
+    "img": "https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/v/_/v_ng_18.png", 
+    "star": 5, 
+    "id_owner": 1, 
+    "id_category": 1
+}
+
+
+//Xoá người dùng
+###
+PUT http://localhost:6868/api/product/delete/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODgxNzAwNn0.Uv0hjCyuewE0_eWITKCeKq8AncT6-l0-Ny8Tn752G08
+
+{
+    "deleted": 1
+}
+
+
+
+###
+GET http://localhost:6868/api/product?category=1
+Content-Type: application/json
+
+###
+GET http://localhost:6868/api/product/?page=1
+Content-Type: application/json
+
+
+
+
+//Thêm mới thông tin sản phẩm
+
+###
+POST http://localhost:6868/api/filter
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+
+{
+    "id_pro": 2, 
+    "size": "512GB", 
+    "color": "Black",
+    "quantity": 8,
+    "price": 9999
+}
+
+
+###
+PUT http://localhost:6868/api/filter/update/17
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+
+{
+    "id_pro": 2, 
+    "size": "64GB", 
+    "color": "White",
+    "quantity": 2,
+    "price": 6868
+}
+
+###
+GET http://localhost:6868/api/filter/find/9
+Content-Type: application/json
+
+
+###
+GET http://localhost:6868/api/filter/searchsize?color=Gold&idpro=2
+Content-Type: application/json
+
+###
+GET http://localhost:6868/api/filter/searchcolor?size=64GB&idpro=2
+Content-Type: application/json
+
+###
+GET http://localhost:6868/api/filter/details?size=128GB&idpro=2&color=Gold
+Content-Type: application/json
+
+
+//Tạo giỏ hàng mới cho người dùng
+###
+POST http://localhost:6868/api/cart
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
+###
+PUT http://localhost:6868/api/cart
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNTc0OX0.ofCnJRlInp_s4AfyNPnwaaKoPFI6W5kTYjS6XyyUmLk
+
+{
+    "total": 1000
+}
+
+
+//GET CART
+###
+GET http://localhost:6868/api/cart
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
+###
+
+
+///Cart details
+###
+GET http://localhost:6868/api/cartdetail
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
+###
+
+
+///Cart details
+###
+POST http://localhost:6868/api/cartdetail
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
+
+{
+    "id_cart" : 2, 
+    "id_filter" : 8,
+    "quantity" : 3, 
+    "subtotal" : 3000
+}
+###
