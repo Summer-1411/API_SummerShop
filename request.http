@@ -27,7 +27,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3OTkzMzMyMX0.WsMzyoVbwermRpqjizQFtbPgXwHhaQYE2QLyUtCcwPo
 
 
-
+###
+GET http://localhost:6868/api/user/alluser?id=30
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTQ4MDU1MX0.YW65k89HCWqEad5MtS5ym4FUQB0GBgT1FLWLFnLLgaQ
 ###
 POST http://localhost:6868/api/auth/login
 Content-Type: application/json
@@ -42,7 +45,7 @@ POST http://localhost:6868/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "user123@gmail.com",
+    "email": "daoquynanh@gmail.com",
     "password": "123456"
 }
 
@@ -129,11 +132,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
 
 
 ###
-GET http://localhost:6868/api/product?category=1
+GET http://localhost:6868/api/product/detail/2
 Content-Type: application/json
 
 ###
-GET http://localhost:6868/api/product/?page=1
+GET http://localhost:6868/api/product/page
 Content-Type: application/json
 
 
@@ -169,12 +172,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
 }
 
 ###
-GET http://localhost:6868/api/filter/find/9
+GET http://localhost:6868/api/filter/find/2
+Content-Type: application/json
+
+###
+GET http://localhost:6868/api/filter/details?idpro=2&size=128GB&color=Black
 Content-Type: application/json
 
 
 ###
-GET http://localhost:6868/api/filter/searchsize?color=Gold&idpro=2
+GET http://localhost:6868/api/filter/searchsize?color=Black&idpro=2
+Content-Type: application/json
+
+###
+GET http://localhost:6868/api/filter/img?color=Black&idpro=2
 Content-Type: application/json
 
 ###
@@ -188,24 +199,31 @@ Content-Type: application/json
 
 //Tạo giỏ hàng mới cho người dùng
 ###
+GET http://localhost:6868/api/cart
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsImlzQWRtaW4iOjAsImlhdCI6MTY4MTA1NTk5M30.bnD-lJ1J0Q0wOkP5Ng5vtzAy5M-C95hTZvg1OOTDUdk
+###
 POST http://localhost:6868/api/cart
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
-###
-PUT http://localhost:6868/api/cart
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNTc0OX0.ofCnJRlInp_s4AfyNPnwaaKoPFI6W5kTYjS6XyyUmLk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTAzMzEyNH0.QDY2JCAAFHJTTj5_oEL2BI58xy1MvcKClEHyB6e8DYw
 
 {
-    "total": 1000
+    "filter": 10,
+    "quantity": 2,
+    "subtotal": 2400
 }
 
 
 //GET CART
 ###
-GET http://localhost:6868/api/cart
+PUT http://localhost:6868/api/cart
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTA2MjM5NX0.EtrxEqCj5YCB9F-6uzcCCgI3MVh_9jSbye17yxylJEA
+
+{
+    "quantity": 99,
+    "id_filter": 10
+}
 ###
 
 
@@ -216,7 +234,11 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
 ###
 
-
+###
+PUT http://localhost:6868/api/cart
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRtaW4iOjAsImlhdCI6MTY3OTkzNjExN30.x6mClHjIoZE_gykdo_sCEfZqDZoHQ1I__J4sjNPEOpw
+###
 ///Cart details
 ###
 POST http://localhost:6868/api/cartdetail
@@ -230,3 +252,55 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjYsImlzQWRta
     "subtotal" : 3000
 }
 ###
+
+
+
+###
+GET http://localhost:6868/api/order
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsImlzQWRtaW4iOjAsImlhdCI6MTY4MTIwNzg1NX0.Ez96r7tLmDB_cm3EH0-5W0caDLYkHEhmu4RabqX4BuM
+
+
+###
+GET http://localhost:6868/api/order/cancel
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTIxMjcyNX0.0p5m8-68PMw1hoSEcX2GsBQrt0GmCY8CAXo6R1svmG8
+
+
+###
+GET http://localhost:6868/api/order_detail/8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsImlzQWRtaW4iOjAsImlhdCI6MTY4MTIwNzg1NX0.Ez96r7tLmDB_cm3EH0-5W0caDLYkHEhmu4RabqX4BuM
+
+###
+PUT http://localhost:6868/api/order/30
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTIxMjcyNX0.0p5m8-68PMw1hoSEcX2GsBQrt0GmCY8CAXo6R1svmG8
+
+{
+    "id": 13
+}
+
+
+//Get đơn hàng by Admin
+###
+GET http://localhost:6868/api/order/byAdmin?success=true
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsImlzQWRtaW4iOjAsImlhdCI6MTY4MTMyMjE1M30.a-BOhCvVDdF-HE8JJb48sw4bt-A8Mq4jRCv_2BTNRWQ
+
+
+//Get đơn hàng by Admin
+###
+PUT http://localhost:6868/api/order/byAdmin/13
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTM5NjYzMn0.J9qDaIKoS5t70A7Kh5gWQ4k1GnCuPiktG6EONTIhtEE
+
+
+
+//GET ALL PRODUCT BY ADMIN
+//Xoá người dùng
+###
+GET http://localhost:6868/api/product/byAdmin?page=1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTM5NjYzMn0.J9qDaIKoS5t70A7Kh5gWQ4k1GnCuPiktG6EONTIhtEE
+
