@@ -88,15 +88,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
 ###
 POST http://localhost:6868/api/product
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MzYyNDcyMX0.NxldlqNFhAcmcSH3QrDChuEZa4ClVkkN7TTO-BYsEFo
 
 {
-    "name": "Samsung S23 Ultra 10", 
-    "description": "S23 ", 
+    "name": "New Product", 
+    "description": "hihi ", 
     "information": "Máy mới 100%", 
     "status": "Còn hàng", 
     "img": "https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/v/_/v_ng_18.png", 
-    "star": 5, 
     "id_owner": 2, 
     "id_category": 1
 }
@@ -108,12 +107,11 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODgxNzAwNn0.Uv0hjCyuewE0_eWITKCeKq8AncT6-l0-Ny8Tn752G08
 
 {
-    "name": "iPhone X", 
+    "name": "iPhone XS", 
     "description": "iPhone 6s", 
     "information": "Máy mới 100% ", 
     "status": "Còn hàng", 
     "img": "https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/v/_/v_ng_18.png", 
-    "star": 5, 
     "id_owner": 1, 
     "id_category": 1
 }
@@ -170,6 +168,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
     "quantity": 2,
     "price": 6868
 }
+###
+GET http://localhost:6868/api/category
+Content-Type: application/json
+
+###
+GET http://localhost:6868/api/producer
+Content-Type: application/json
+
+
 
 ###
 GET http://localhost:6868/api/filter/find/2

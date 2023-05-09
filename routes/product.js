@@ -38,7 +38,7 @@ router.get("/byAdmin/", verifyTokenAndAdmin, async (req, res) => {
                                 INNER JOIN producer ON product.id_owner = producer.id
                     WHERE deleted = ? ORDER BY createAt DESC`
 
-    
+
     const qpage = req.query.page;
     if (qpage) {
         let page = Number(qpage)
@@ -60,17 +60,23 @@ router.get("/byAdmin/", verifyTokenAndAdmin, async (req, res) => {
 
 router.get("/", async (req, res) => {
     const qCategory = req.query.category;
-    const qOwner = req.query.owner;
+    const qOwner = req.query.producer;
     const qid = req.query.id;
     const qpage = req.query.page;
-
+    console.log({ qCategory, qOwner, qid, qpage });
     try {
-        if (qCategory) {
-            let [products] = await pool.execute(`SELECT * FROM product WHERE id_category = ? AND deleted = ? ORDER BY createAt DESC`, [qCategory, 0]);
+        if (qCategory && qpage) {
+            let page = Number(qpage)
+            let limit = 12;
+            let offset = (page - 1) * 12;
+            let [products] = await pool.execute(`SELECT * FROM product WHERE id_category = ? AND deleted = ? ORDER BY createAt DESC LIMIT ${limit} OFFSET ${offset}`, [qCategory, 0]);
             return res.status(200).json({ success: true, products })
         }
-        else if (qOwner) {
-            let [products] = await pool.execute(`SELECT * FROM product WHERE id_owner = ? AND deleted = ? ORDER BY createAt DESC`, [qOwner, 0]);
+        else if (qOwner && qpage) {
+            let page = Number(qpage)
+            let limit = 12;
+            let offset = (page - 1) * 12;
+            let [products] = await pool.execute(`SELECT * FROM product WHERE id_owner = ? AND deleted = ? ORDER BY createAt DESC LIMIT ${limit} OFFSET ${offset}`, [qOwner, 0]);
             return res.status(200).json({ success: true, products })
         }
         else if (qid) {
@@ -95,14 +101,20 @@ router.get("/", async (req, res) => {
 
 
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
-    const { name, description, information, status, img, star, id_owner, id_category } = req.body
+    const { name, description, information, priceRange, status, img, id_owner, id_category } = req.body
 
     try {
-        const [result] = await pool.query('INSERT INTO product (name, description, information, status, img, star, id_owner, id_category) VALUES (?, ?, ?, ?, ?, ?, ? ,?)',
-            [name, description, information, status, img, star, id_owner, id_category]);
-        return res.status(200).json({ success: true, message: "Thêm mới sản phẩm thành công " })
+        const [result] = await pool.query('INSERT INTO product (name, description, information, priceRange, status, img, id_owner, id_category) VALUES (?, ?,?, ?, ?, ?, ?, ?)',
+            [name, description, information, Number(priceRange), status, img, Number(id_owner), Number(id_category)]);
+        
+        const filters = req.body.filters
+        const values1 = filters.map(item => [result.insertId, item.color, item.size,  Number(item.quantity), Number(item.price), item.img]);
+        const sql = 'INSERT INTO filter (id_pro, color, size, quantity, price, img) VALUES ?';
+        const [result1] = await pool.query(sql, [values1]);
+        console.log(req.body);
+        return res.status(200).json({ success: true, message: "Thêm mới sản phẩm thành công" })
     } catch (error) {
-        console.log("error lỗi");
+        console.log(error);
         return res.status(500).json({ success: false, message: "Internal server error !" })
     }
 })
