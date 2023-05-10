@@ -106,9 +106,9 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
     try {
         const [result] = await pool.query('INSERT INTO product (name, description, information, priceRange, status, img, id_owner, id_category) VALUES (?, ?,?, ?, ?, ?, ?, ?)',
             [name, description, information, Number(priceRange), status, img, Number(id_owner), Number(id_category)]);
-        
+
         const filters = req.body.filters
-        const values1 = filters.map(item => [result.insertId, item.color, item.size,  Number(item.quantity), Number(item.price), item.img]);
+        const values1 = filters.map(item => [result.insertId, item.color, item.size, Number(item.quantity), Number(item.price), item.img]);
         const sql = 'INSERT INTO filter (id_pro, color, size, quantity, price, img) VALUES ?';
         const [result1] = await pool.query(sql, [values1]);
         console.log(req.body);
@@ -131,13 +131,21 @@ router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error !" })
     }
 })
+router.get("/count/deleted", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        let [count] = await pool.execute(`SELECT COUNT(*) AS numberDeleted FROM product WHERE deleted = ?`, [1])
+        return res.status(200).json({success: true, count: count[0]})
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
+})
 
 router.put("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
-    const { deleted } = req.body
+    //const { deleted } = req.body
 
     try {
         const [result] = await pool.execute('UPDATE product SET deleted=? WHERE id=?',
-            [deleted, req.params.id]);
+            [1, req.params.id]);
         return res.status(200).json({ success: true, message: "Xoá sản phẩm thành công " })
     } catch (error) {
         console.log("error lỗi");
