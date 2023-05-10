@@ -16,6 +16,14 @@ router.get("/page", async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error !" })
     }
 })
+router.get("/pageDeleted", async (req, res) => {
+    try {
+        let [page] = await pool.execute(`SELECT CEIL(COUNT(*) / 12) AS numPages FROM product WHERE deleted = ?`, [1])
+        return res.status(200).json(page)
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
+})
 
 router.get("/detail/:id", async (req, res) => {
     try {
@@ -57,6 +65,35 @@ router.get("/byAdmin/", verifyTokenAndAdmin, async (req, res) => {
     console.log("123");
     return res.status(200).json({ success: true, products, message: "OKKKK" })
 })
+
+//Get product deleted
+//Get product by Admin
+router.get("/deleted-byAdmin/", verifyTokenAndAdmin, async (req, res) => {
+    const query = `SELECT product.*, category.name AS category, producer.name AS producer
+                    FROM product INNER JOIN category ON product.id_category = category.id 
+                                INNER JOIN producer ON product.id_owner = producer.id
+                    WHERE deleted = ? ORDER BY createAt DESC`
+
+
+    const qpage = req.query.page;
+    if (qpage) {
+        let page = Number(qpage)
+        let limit = 12;
+        let offset = (page - 1) * 12;
+        const pageQuery = `SELECT product.*, category.name AS category, producer.name AS producer
+                        FROM product INNER JOIN category ON product.id_category = category.id 
+                        INNER JOIN producer ON product.id_owner = producer.id
+                        WHERE deleted = ? ORDER BY createAt DESC
+                        LIMIT ${limit} OFFSET ${offset}`
+
+        let [products] = await pool.execute(pageQuery, [1]);
+        return res.status(200).json({ success: true, products })
+    }
+    let [products] = await pool.execute(query, [1])
+    console.log("123");
+    return res.status(200).json({ success: true, products, message: "OKKKK" })
+})
+
 
 router.get("/", async (req, res) => {
     const qCategory = req.query.category;
@@ -147,6 +184,19 @@ router.put("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
         const [result] = await pool.execute('UPDATE product SET deleted=? WHERE id=?',
             [1, req.params.id]);
         return res.status(200).json({ success: true, message: "Xoá sản phẩm thành công " })
+    } catch (error) {
+        console.log("error lỗi");
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
+})
+
+router.put("/cancel-delete/:id", verifyTokenAndAdmin, async (req, res) => {
+    //const { deleted } = req.body
+
+    try {
+        const [result] = await pool.execute('UPDATE product SET deleted=? WHERE id=?',
+            [0, req.params.id]);
+        return res.status(200).json({ success: true, message: "Khôi phục sản phẩm thành công " })
     } catch (error) {
         console.log("error lỗi");
         return res.status(500).json({ success: false, message: "Internal server error !" })
