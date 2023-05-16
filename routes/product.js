@@ -25,11 +25,21 @@ router.get("/pageDeleted", async (req, res) => {
     }
 })
 
+router.get("/search", async (req, res) => {
+    try {
+        let [products] = await pool.execute(`SELECT * FROM product WHERE name = ? AND deleted = ?`, [req.query.name, 0]);
+        return res.status(200).json({ success: true, products})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
+})
+
 router.get("/detail/:id", async (req, res) => {
     try {
         let [product] = await pool.execute(`SELECT * FROM product WHERE id = ? AND deleted = ?`, [req.params.id, 0]);
-        const [sizes] = await pool.execute(`SELECT id,size FROM filter WHERE id_pro=? GROUP BY size`, [req.params.id])
-        const [colors] = await pool.execute(`SELECT id,color,img FROM filter WHERE id_pro=? GROUP BY color`, [req.params.id])
+        const [sizes] = await pool.execute(`SELECT id,size FROM filter WHERE id_pro=? AND deleted=? GROUP BY size`, [req.params.id, 0])
+        const [colors] = await pool.execute(`SELECT id,color,img FROM filter WHERE id_pro=? AND deleted=? GROUP BY color`, [req.params.id, 0])
         // const [imgs] = await pool.execute(`SELECT id, img FROM filter WHERE id_pro=? GROUP BY color`, [req.params.id])
         return res.status(200).json({ success: true, product: product[0], sizes, colors })
     } catch (error) {
@@ -64,6 +74,16 @@ router.get("/byAdmin/", verifyTokenAndAdmin, async (req, res) => {
     let [products] = await pool.execute(query, [0])
     console.log("123");
     return res.status(200).json({ success: true, products, message: "OKKKK" })
+})
+router.get("/detail-admin/:id", async (req, res) => {
+    try {
+        let [product] = await pool.execute(`SELECT * FROM product WHERE id = ?`, [req.params.id]);
+        const [filter] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND deleted=?`, [req.params.id,0])
+        return res.status(200).json({ success: true, product: product[0], filter })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
 })
 
 //Get product deleted
@@ -157,11 +177,11 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 })
 
 router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
-    const { name, description, information, status, img, star, id_owner, id_category } = req.body
+    const { name, description, information, status, img, id_owner, id_category } = req.body
 
     try {
-        const [result] = await pool.execute('UPDATE product SET name = ?, description=?, information=?, status=?, img=?, star=?, id_owner=?, id_category=? WHERE id=?',
-            [name, description, information, status, img, star, id_owner, id_category, req.params.id]);
+        const [result] = await pool.execute('UPDATE product SET name = ?, description=?, information=?, status=?, img=?, id_owner=?, id_category=? WHERE id=?',
+            [name, description, information, status, img,Number(id_owner), Number(id_category), req.params.id]);
         return res.status(200).json({ success: true, message: "Cập nhật sản phẩm thành công " })
     } catch (error) {
         console.log("error lỗi");

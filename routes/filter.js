@@ -98,11 +98,11 @@ router.get('/details', async (req, res) => {
 
 //Thêm bảng phân loại
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
-    const {id_pro, size, color, quantity, price} = req.body
+    const {id_pro, size, color, quantity, price, img} = req.body
     try {
-        const [result] = await pool.query('INSERT INTO filter (id_pro, size, color, quantity, price) VALUES (?, ?, ?, ?, ?)', 
-        [id_pro, size, color, quantity, price]);
-        return res.status(200).json({success: true, message: "Thêm mới thông tin sản phẩm thành công"})
+        const [result] = await pool.query('INSERT INTO filter (id_pro, size, color, quantity, price, img) VALUES (?, ?, ?, ?, ?, ?)', 
+        [id_pro, size, color, Number(quantity), Number(price), img]);
+        return res.status(200).json({success: true, message: "Thêm mới thông tin sản phẩm thành công", id: result.insertId})
     } catch (error) {
         console.log("error lỗi");
         return res.status(500).json({success: false, message: "Internal server error !"})
@@ -110,10 +110,26 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 })
 
 router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
-    const {id_pro, size, color, quantity, price} = req.body
+    const {size, color, quantity, price, img} = req.body
+
+    const values = [];
+    if (size) values.push(`size='${size}'`);
+    if (color) values.push(`color='${color}'`);
+    if (quantity) values.push(`quantity='${Number(quantity)}'`);
+    if (price) values.push(`price='${Number(price)}'`);
+    if (img) values.push(`img='${img}'`);
+
+    // try {
+    //     await pool.execute(
+    //         `UPDATE user SET ${values.join(", ")} WHERE id = ?`,
+    //         [req.params.id]
+    //     );
+    //     console.log(req.body);
+    //     return res.status(200).json({ success: true, message: "Cập nhật thông tin thành công" })
+
     try {
-        const [result] = await pool.execute('UPDATE filter SET id_pro=?, size=?, color=?, quantity=?, price=? WHERE id=?', 
-        [id_pro, size, color, quantity, price, req.params.id]);
+        const [result] = await pool.execute(`UPDATE filter SET ${values.join(", ")} WHERE id=?`, 
+        [req.params.id]);
         return res.status(200).json({success: true, message: "Cập nhật thông tin sản phẩm thành công"})
     } catch (error) {
         console.log("error lỗi");
@@ -121,12 +137,12 @@ router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
     }
 })
 
-router.delete("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
+router.put("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
     console.log(req.params.id);
     try {
-        const [result] = await pool.execute('DELETE FROM filter WHERE id=?', 
-        [req.params.id]);
-        return res.status(200).json({success: true, message: "Xoá tin sản phẩm thành công"})
+        const [result] = await pool.execute('UPDATE filter SET deleted=? WHERE id=?', 
+        [1, req.params.id]);
+        return res.status(200).json({success: true, message: "Xoá thông tin sản phẩm thành công"})
     } catch (error) {
         console.log("error lỗi", error);
         return res.status(500).json({success: false, message: "Internal server error !"})
