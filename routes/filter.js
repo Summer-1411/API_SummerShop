@@ -12,7 +12,7 @@ const pool = require('../common/connectDB')
 //GET filter theo id
 router.get('/find/:id', async (req, res) => {
     try {
-        const [filter] = await pool.execute(`SELECT * FROM filter WHERE id_pro=?`, [req.params.id])
+        const [filter] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND deleted=?`, [req.params.id, 0])
         return res.status(200).json({success: true, filter})
     } catch (error) {
         console.log(error);
@@ -22,7 +22,7 @@ router.get('/find/:id', async (req, res) => {
 //GET ALL COLOR - 1 PRODUCT by id_pro
 router.get('/color/:id', async (req, res) => {
     try {
-        const [colors] = await pool.execute(`SELECT color FROM filter WHERE id_pro=? GROUP BY color`, [req.params.id])
+        const [colors] = await pool.execute(`SELECT color FROM filter WHERE id_pro=? AND deleted=? GROUP BY color`, [req.params.id, 0])
         return res.status(200).json({success: true, colors})
     } catch (error) {
         console.log(error);
@@ -34,7 +34,7 @@ router.get('/color/:id', async (req, res) => {
 //GET ALL SIZE - 1 PRODUCT by id_pro
 router.get('/size/:id', async (req, res) => {
     try {
-        const [sizes] = await pool.execute(`SELECT size FROM filter WHERE id_pro=? GROUP BY size`, [req.params.id])
+        const [sizes] = await pool.execute(`SELECT size FROM filter WHERE id_pro=? AND deleted=? GROUP BY size`, [req.params.id, 0])
         return res.status(200).json({success: true, sizes})
     } catch (error) {
         console.log(error);
@@ -47,7 +47,7 @@ router.get('/searchsize', async (req, res) => {
     const qcolor = req.query.color
     const qid_pro = req.query.idpro
     try {
-        const [sizes] = await pool.execute(`SELECT id, size FROM filter WHERE id_pro=? AND color=? GROUP BY size`, [qid_pro, qcolor])
+        const [sizes] = await pool.execute(`SELECT id, size FROM filter WHERE id_pro=? AND color=? AND deleted=? GROUP BY size`, [qid_pro, qcolor, 0])
         return res.status(200).json({success: true, sizes})
     } catch (error) {
         console.log(error);
@@ -60,7 +60,7 @@ router.get('/searchcolor', async (req, res) => {
     const qsize = req.query.size
     const qid_pro = req.query.idpro
     try {
-        const [colors] = await pool.execute(`SELECT id, color, img FROM filter WHERE id_pro=? AND size=? GROUP BY color`, [qid_pro, qsize])
+        const [colors] = await pool.execute(`SELECT id, color, img FROM filter WHERE id_pro=? AND size=? AND deleted=? GROUP BY color`, [qid_pro, qsize, 0])
         return res.status(200).json({success: true, colors})
     } catch (error) {
         console.log(error);
@@ -73,7 +73,7 @@ router.get("/img", async (req, res)=> {
     const qcolor = req.query.color
     const qid_pro = req.query.idpro
     try {
-        const [img] = await pool.execute(`SELECT img FROM filter WHERE id_pro=? AND color=?`, [qid_pro, qcolor])
+        const [img] = await pool.execute(`SELECT img FROM filter WHERE id_pro=? AND deleted=? AND color=?`, [qid_pro, qcolor, 0])
         return res.status(200).json({image: img[0]})
     } catch (error) {
         console.log(error);
@@ -88,7 +88,7 @@ router.get('/details', async (req, res) => {
     const qcolor = req.query.color
     const qid_pro = req.query.idpro
     try {
-        const [detail] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND size=? AND color=?`, [qid_pro, qsize, qcolor])
+        const [detail] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND size=? AND color=? AND deleted=?`, [qid_pro, qsize, qcolor, 0])
         return res.status(200).json({success: true, detail: detail[0]})
     } catch (error) {
         console.log(error);

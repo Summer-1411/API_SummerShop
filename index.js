@@ -13,6 +13,7 @@ const orderRoute = require('./routes/order')
 const producerRoute = require('./routes/producer')
 const categoryRoute = require('./routes/category')
 const orderDetailroute = require('./routes/order_detail')
+const statRoute = require('./routes/stat')
 
 const app = express()
 app.use(express.json())
@@ -46,6 +47,7 @@ app.use('/api/category', categoryRoute)
 app.use('/api/cart', cartRoute)
 app.use('/api/order', orderRoute)
 app.use('/api/order_detail', orderDetailroute)
+app.use('/api/stat', statRoute)
 
 
 const PORT = process.env.PORT || 6868

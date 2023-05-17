@@ -32,16 +32,25 @@ router.get("/count/deleted", verifyTokenAndAdmin, async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error !" })
     }
 })
+router.get("/search", async (req, res) => {
+    try {
+        let [users] = await pool.execute(`SELECT * FROM user WHERE username = ? AND deleted = ?`, [req.query.name, 0]);
+        return res.status(200).json({ success: true, users})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
+})
 
 router.get("/alluser/", verifyTokenAndAdmin, async (req, res) => {
     const qid = req.query.id
     const qpage = req.query.page
     try {
         if (qid) {
-            const [users] = await pool.query(`SELECT * FROM user WHERE id = ?`, [qid]);
+            const [user] = await pool.query(`SELECT * FROM user WHERE id = ?`, [qid]);
             // const [countSuccess] = await pool.query(`SELECT COUNT(*) as number FROM orders WHERE id_user = ? AND status = ? GROUP BY id_user`, [qid, 2]);
             // const [countCancel] = await pool.query(`SELECT COUNT(*) as number FROM orders WHERE id_user = ? AND status = ? GROUP BY id_user`, [qid, -1]);
-            return res.status(200).json({ success: true, users})
+            return res.status(200).json({ success: true, user : user[0]})
         }else if(qpage){
             let page = Number(qpage)
             let limit = 5;
