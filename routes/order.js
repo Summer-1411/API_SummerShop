@@ -69,7 +69,7 @@ router.get("/byCustomer", verifyToken, async (req, res) => {
         //Đã huỷ bởi khách hàng
         const cancel = req.query.cancel;
 
-        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.orderDate, orders.status, orders.shipping_address, orders.total_amount
+        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.orderDate, orders.status, orders.note, orders.reason, orders.shipping_address, orders.total_amount
                         FROM orders
                         WHERE id_user = ? AND status = ? ORDER BY orders.orderDate DESC`;
 
@@ -87,7 +87,8 @@ router.get("/byCustomer", verifyToken, async (req, res) => {
 
         //Mặc định lấy các đơn đang chờ xử lý
         const [order] = await pool.query(query, [req.user.id, 0]);
-        return res.status(200).json({ success: true, order })
+        const [orderError] = await pool.query(query, [req.user.id, -2]);
+        return res.status(200).json({ success: true, order, orderError })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error' })
@@ -144,7 +145,7 @@ router.get("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
         //Đã huỷ bởi khách hàng
         const cancel = req.query.cancel;
 
-        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.orderDate, orders.status, orders.shipping_address, orders.total_amount, user.email
+        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.note, orders.reason, orders.orderDate, orders.status, orders.shipping_address, orders.total_amount, user.email, user.username
                         FROM orders INNER JOIN user ON user.id = orders.id_user
                         WHERE status = ? ORDER BY orders.orderDate DESC`;
         if (confirm) {
@@ -154,7 +155,6 @@ router.get("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
             const [order] = await pool.query(query, [2]);
             return res.status(200).json({ success: true, order })
         } else if (refuse) {
-
             const [order] = await pool.query(query, [-2]);
             return res.status(200).json({ success: true, order })
         } else if (cancel) {
@@ -205,19 +205,23 @@ router.put("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
             const [handleOrder] = await pool.query(query, [2, id]);
             return res.status(200).json({ success: true, message: "Đơn đã hoàn thành" })
         } else if (refuse) {
-            console.log("refuse");
+            let reason = req.body.reason
+            console.log("refuse", reason, id);
             const [detail] = await pool.query(`SELECT * FROM order_detail WHERE id_order = ?`, [id])
             console.log(detail);
             //Admin cancel thì số lượng sản phẩm trở về ban đầu như khi khách chưa đặt
             await updateFiltersQuantitiesByAdminCancel(detail)
-            const [handleOrder] = await pool.query(query, [-2, id]);
+            const qr = `UPDATE orders SET status = ?, reason = ? WHERE id = ?`;
+            const [handleOrder] = await pool.query(qr, [-2, reason,id]);
             return res.status(200).json({ success: true, message: "Đã huỷ đơn thành công" })
         } else if (undo) {
             console.log("undo");
+            let reason = req.body.reason
+            const qr = `UPDATE orders SET status = ?, reason = ? WHERE id = ?`;
             //Admin hoàn tác lại thao tác huỷ đơn hàng thì số lươnng sản phẩm sẽ bị giảm đi như khi người dùng đặt
             const [detail] = await pool.query(`SELECT * FROM order_detail WHERE id_order = ?`, [id])
             await updateFiltersQuantities(detail)
-            const [handleOrder] = await pool.query(query, [0, id]);
+            const [handleOrder] = await pool.query(qr, [0, reason,id]);
             return res.status(200).json({ success: true, message: "Đã hoàn tác hành động huỷ đơn" })
         }
 
