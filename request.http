@@ -311,3 +311,20 @@ GET http://localhost:6868/api/product/byAdmin?page=1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTM5NjYzMn0.J9qDaIKoS5t70A7Kh5gWQ4k1GnCuPiktG6EONTIhtEE
 
+//thống kê
+###
+
+GET http://localhost:6868/api/stat/sold/31
+Content-Type: application/json
+###
+
+GET http://localhost:6868/api/stat/bought/33
+Content-Type: application/json
+###
+GET http://localhost:6868/api/stat/stat-byUser/33
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4NDMzMTk3Mn0.jBKpZfW9w5gl5BaiEMaY_PSmkS6zhI8Fk3HGs9nEqBM
+###
+GET http://localhost:6868/api/stat/count
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4NDMwNTMxNH0._mZUO9ghw-jtk3rD0bUFUPjwLx9xyzm2cpIfxIfwCiI
