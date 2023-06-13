@@ -34,7 +34,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
         if(id === par || req.user.isAdmin){
             next();
         }else {
-            return res.status(403).json("Bạn không được phép làm điều đó !")
+            return res.status(403).json({success: false, message: "Bạn không được phép làm điều đó !"})
         }
     })
 }

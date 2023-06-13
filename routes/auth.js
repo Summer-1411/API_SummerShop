@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
 	try {
 		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ?`, [email]);
 		if(userExist.length > 0){
-			return res.status(500).json({ success: false, user: "Email da ton tai !"})
+			return res.status(500).json({ success: false, message: "Email da ton tai !"})
 		}
 		else {
 			// All good
