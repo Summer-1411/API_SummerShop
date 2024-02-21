@@ -22,10 +22,17 @@ const mysql = require('mysql2/promise');
 //     return connection;
 // }
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'db'
+    host: "sql.freedb.tech",
+    user: "freedb_tunglv27",
+    password: "FgF!kE5TxPPzhW!",
+    database: "freedb_my-shop"
+})
+
+pool.getConnection((err, conn) => {
+    if(err){
+        console.log(err);
+    }
+    console.log('success');
 })
 
 module.exports = pool;
