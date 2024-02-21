@@ -50,6 +50,6 @@ app.use('/api/order_detail', orderDetailroute)
 app.use('/api/stat', statRoute)
 
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 6868
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
