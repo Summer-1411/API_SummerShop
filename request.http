@@ -83,6 +83,24 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
 
 
+###
+POST http://localhost:6868/api/product/search
+Content-Type: application/json
+
+{
+    "sample": {
+        "name": " ",
+        "idCategory": "",
+        "idOwner": "",
+        "id": ""
+    },
+    "orders": {
+        "property": "",
+        "direction": ""
+    }
+}
+
+
 
 //Xoá người dùng
 ###

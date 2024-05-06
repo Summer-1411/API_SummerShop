@@ -8,6 +8,44 @@ const { verifyToken,
 
 const pool = require('../common/connectDB')
 
+router.post("/search", async (req, res) => {
+    // let data = {
+    //     sample: {
+    //         name: "",
+    //         idCategory: "",
+    //         idOwner: "",
+    //         id: "",
+    //     },
+    //     pageInfo: {
+    //         pageNumber: "",
+    //         pageSize: ""
+    //     },
+    //     orders: {
+    //         property: "",
+    //         direction: ""
+    //     }
+    // }
+    let {sample, pageInfo, orders} = req.body
+
+    console.log('body', orders?.property);
+    try {
+        let sql = "SELECT * FROM product WHERE 1=1 "
+        + ` AND (${sample?.name ? `upper(name) like UPPER("%${sample?.name}%")` : "1=1"}) `
+        + ` AND (${sample?.idCategory ? `id_category = ${sample?.idCategory}` : "1=1"}) `
+        + ` AND (${sample?.idOwner ? `id_owner = ${sample?.idOwner}` : "1=1"}) `
+        + ` AND (${sample?.id ? `id = ${sample?.id}` : "1=1"})`
+        + " AND deleted = 0 "
+        + ` ${orders?.property ? `ORDER BY ${orders?.property} ${orders?.direction}` : ""}`
+        console.log('check sql', sql);
+        let [products] = await pool.execute(sql)
+        return res.status(200).json({ success: true, data: products})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
+})
+
+
 router.get("/page", async (req, res) => {
     try {
         let [page] = await pool.execute(`SELECT CEIL(COUNT(*) / 12) AS numPages FROM product WHERE deleted = ?`, [0])
