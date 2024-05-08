@@ -68,10 +68,10 @@ router.put('/', verifyToken, async (req, res) => {
 router.delete("/delete/:id", verifyToken, async (req, res) => {
 	try {
 		const [cart] = await pool.query(`DELETE FROM cart WHERE id_user = ? AND id_filter = ?`, [req.user.id, req.params.id]);
-		res.json({ success: true, message: "Xoá sản phẩm khỏi giỏ hàng thành công"})
+		return res.status(200).json({ success: true, message: "Xoá sản phẩm khỏi giỏ hàng thành công"})
 	} catch (error) {
 		console.log(error) 
-		res.status(500).json({ success: false, message: 'Có lỗi xảy ra trong quá trình xử lý !' })
+		return res.status(500).json({ success: false, message: 'Có lỗi xảy ra trong quá trình xử lý !' })
 	}
 })
 
