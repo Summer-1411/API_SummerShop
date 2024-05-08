@@ -12,7 +12,7 @@ const pool = require('../common/connectDB')
 router.get('/', verifyToken, async (req, res) => {
     try {
 
-		const [cart] = await pool.execute(`SELECT filter.id as id_filter, cart.quantity,  product.name, filter.img, filter.color, filter.size, filter.price FROM cart 
+		const [cart] = await pool.execute(`SELECT cart.id,filter.id as id_filter, cart.quantity,  product.name, filter.img, filter.color, filter.size, filter.price FROM cart 
 		INNER JOIN filter ON cart.id_filter = filter.id
 		INNER JOIN product ON filter.id_pro = product.id
 		WHERE id_user = ?`
