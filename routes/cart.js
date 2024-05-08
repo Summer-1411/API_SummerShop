@@ -28,11 +28,27 @@ router.get('/', verifyToken, async (req, res) => {
 
 router.post('/', verifyToken, async (req, res) => {
     try {
-		console.log("Body:",req.body);
 		const [cart] = await pool.query(`INSERT INTO cart (id_user, id_filter, quantity) VALUES (?, ?, ?)`
 		, [req.user.id, req.body.filter, req.body.quantity]);
 		
 		res.json({ success: true, message: "Đã thêm sản phẩm vào giỏ hàng"})
+	} catch (error) {
+		console.log(error)
+		res.status(500).json({ success: false, message: 'Có lỗi xảy ra trong quá trình xử lý !' })
+	}
+})
+
+
+router.post('/insert-update', verifyToken, async (req, res) => {
+    try {
+		const [cartExist] = await pool.execute(`SELECT * FROM Cart WHERE id_user=${req.user.id} AND id_filter = ${req.body.filter}`)
+		if(cartExist.length > 0){
+			await pool.query(`UPDATE cart SET quantity = quantity + ? WHERE id_user = ? AND id_filter = ?`, [req.body.quantity, req.user.id, req.body.filter]);
+			return res.status(200).json({ success: true, message: "Cập nhật giỏ hàng thành công"})
+		}else {
+			await pool.query(`INSERT INTO cart (id_user, id_filter, quantity) VALUES (?, ?, ?)`, [req.user.id, req.body.filter, req.body.quantity]);
+			return res.status(200).json({ success: true, message: "Đã thêm vào giỏ hàng"})
+		}
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ success: false, message: 'Có lỗi xảy ra trong quá trình xử lý !' })
