@@ -2,21 +2,24 @@ const express = require('express')
 const router = express.Router()
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
-const {verifyToken} = require('../middleware/verifyToken')
+const otpGenerator = require('otp-generator');
+const { verifyToken } = require('../middleware/verifyToken')
 // // const db = require('../common/connectDB')
 // const User = require('../models/User')
 
 const pool = require('../common/connectDB')
+const { sendMail, getBodyHTMLEmail } = require('../service/emailService');
+const { validExpiresTime } = require('../utils');
 
 // @route GET api/auth
 // @desc Check if user is logged in
 // @access Public
 
 router.get('/', verifyToken, async (req, res) => {
-	
+
 	try {
 		const [user] = await pool.query(`SELECT * FROM user WHERE id = ?`, [req.user.id]);
-		console.log({user});
+		console.log({ user });
 		if (user.length === 0)
 			return res.status(400).json({ success: false, message: 'Không tìm thấy người dùng' })
 		res.json({ success: true, user: user[0] })
@@ -26,38 +29,116 @@ router.get('/', verifyToken, async (req, res) => {
 	}
 })
 
-router.post('/register', async (req, res) => {
-	const { email, password, username } = req.body
-	if(!email || !password || !username){
+router.post('/send_otp', async (req, res) => {
+	const { email, username } = req.body
+	if (!email || !username) {
 		return res
-		.status(400)
-		.json({ success: false, message: 'Missing parameters !' })
+			.status(400)
+			.json({ success: false, message: 'Thiếu tham số  !' })
 	}
-	
 	try {
 		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ?`, [email]);
-		if(userExist.length > 0){
-			return res.status(500).json({ success: false, message: "Email da ton tai !"})
+		const [otpExist] = await pool.query(`SELECT * FROM otp WHERE email = ? ORDER BY createAt DESC`, [email]);
+		if (userExist.length > 0) {
+			return res.status(500).json({ success: false, message: "Email đã tồn tại !" })
 		}
+		if (otpExist.length > 0) {
+			// nếu mã chưa quá 15p
+			let checkValidResendEmail = validExpiresTime(otpExist[0]?.createAt)
+			if (checkValidResendEmail) {
+				return res.status(201).json({ success: false, message: "Mã OTP đã được gửi. Vui lòng kiểm tra lại hộp thư email !" })
+			}
+		}
+
+	
+
+		let otp = otpGenerator.generate(6, {
+			upperCaseAlphabets: false,
+			lowerCaseAlphabets: false,
+			specialChars: false,
+		});
+		let [valueOTP] = await pool.query(`SELECT * FROM otp WHERE otp = ?`, [otp]);
+		while (valueOTP.length > 0) {
+			otp = otpGenerator.generate(6, {
+				upperCaseAlphabets: false,
+				lowerCaseAlphabets: false,
+				specialChars: false,
+			});
+			[valueOTP] = await pool.query(`SELECT * FROM otp WHERE otp = ?`, [otp]);
+		}
+		const data = {
+			email: email,
+			subject: "Xác nhận đăng ký",
+			html: getBodyHTMLEmail({
+				username: username,
+				otp: otp
+			})
+		}
+		const rs = await sendMail(data)
+
+		await pool.query('INSERT INTO OTP (otp, email) VALUES (?, ?)', [otp, email]);
+
+		return res.status(200).json({ success: true, message: "Gửi mã OTP thành công !", otp })
+
+
+	} catch (error) {
+		console.log('error', error);
+		return res.status(500).json({ success: false, message: "Internal server error" })
+	}
+})
+
+router.post('/register_otp', async (req, res) => {
+	const { password, username, otp } = req.body
+	if (!password || !username || !otp) {
+		return res
+			.status(400)
+			.json({ success: false, message: 'Missing parameters !' })
+	}
+	try {
+		let [valueOTP] = await pool.query(`SELECT * FROM otp WHERE otp = ?`, [otp]);
+		if (valueOTP.length == 0) {
+			return res.status(500).json({ success: false, message: "Mã OTP không hợp lệ !" })
+		}
+		console.log(valueOTP);
+		let checkTimeExpires = validExpiresTime(valueOTP[0]?.createAt)
+		console.log('check checkTimeExpires', checkTimeExpires);
+
+		if (checkTimeExpires) {
+			const hashedPassword = await argon2.hash(password)
+			const [result] = await pool.query('INSERT INTO user (email, password, username) VALUES (?, ?, ?)', [valueOTP[0]?.email, hashedPassword, username]);
+			return res.status(200).json({ success: true, message: "Bạn đã đăng ký thành công" })
+		}
+
+		return res.status(400).json({ success: true, message: "Mã OTP đã hết hạn !" })
+	} catch (error) {
+		return res.status(500).json({ success: false, message: "Internal server error" })
+	}
+})
+
+router.post('/register', async (req, res) => {
+	const { email, password, username } = req.body
+	if (!email || !password || !username) {
+		return res
+			.status(400)
+			.json({ success: false, message: 'Missing parameters !' })
+	}
+
+	try {
+		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ?`, [email]);
+		if (userExist.length > 0) {
+			return res.status(500).json({ success: false, message: "Email da ton tai !" })
+		}
+
 		else {
 			// All good
 			const hashedPassword = await argon2.hash(password)
 			const [result] = await pool.query('INSERT INTO user (email, password, username) VALUES (?, ?, ?)', [email, hashedPassword, username]);
-			
-			// Return token
-			// console.log({result, fields});
-			// const accessToken = jwt.sign(
-			// 	{ userId: result.insertId },
-			// 	process.env.ACCESS_TOKEN_SECRET
-			// )
-			
-			return res.status(200).json({ success: true, message: "Người dùng mới đã được chèn vào cơ sở dữ liệu"})
+			return res.status(200).json({ success: true, message: "Người dùng mới đã được chèn vào cơ sở dữ liệu" })
 		}
-		
+
 	} catch (error) {
-		return res.status(500).json({success: false, message: "Internal server error"})
+		return res.status(500).json({ success: false, message: "Internal server error" })
 	}
-	
 })
 
 router.post('/login', async (req, res) => {
@@ -72,12 +153,12 @@ router.post('/login', async (req, res) => {
 	try {
 		// Check for existing user
 		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ? AND deleted = ?`, [email, 0]);
-		if (userExist.length === 0){
+		if (userExist.length === 0) {
 			return res
 				.status(400)
 				.json({ success: false, message: 'Tài khoản không tồn tại !' })
 		}
-		
+
 
 		// Username found
 		const passwordValid = await argon2.verify(userExist[0].password, password)
@@ -92,13 +173,14 @@ router.post('/login', async (req, res) => {
 		// 		.status(400)
 		// 		.json({ success: false, message: 'Tài khoản đã bị xoá !'})
 		// }
-		
+
 		// All good
 		// Return token
-		const accessToken = jwt.sign({ 
+		const accessToken = jwt.sign({
 			id: userExist[0].id,
 			isAdmin: userExist[0].isAdmin
-		},process.env.ACCESS_TOKEN_SECRET
+		},
+			process.env.ACCESS_TOKEN_SECRET
 		)
 		res.json({
 			success: true,

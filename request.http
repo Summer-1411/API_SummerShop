@@ -1,14 +1,36 @@
 ###
 GET https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1
 
+
+//Send OTP
+###
+POST http://localhost:6868/api/auth/send_otp
+Content-Type: application/json
+
+{
+    "email": "levantung14112002@gmail.com",
+    "username": "Summer"
+}
+
+//Send OTP
+###
+POST http://localhost:6868/api/auth/register_otp
+Content-Type: application/json
+
+{
+    "password": "levantung14112002@gmail.com",
+    "username": "Summer",
+    "otp": "444422"
+}
+###
 //Đăng ký
 POST http://localhost:6868/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "usertest@gmail.com",
+    "email": "usertest11111@gmail.com",
     "password": "123456",
-    "username": "test"
+    "username": "Summer"
 }
 
 
@@ -30,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
 ###
 GET http://localhost:6868/api/user/alluser?id=30
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTQ4MDU1MX0.YW65k89HCWqEad5MtS5ym4FUQB0GBgT1FLWLFnLLgaQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxldmFudHVuZzE0MTEyMDAyQGdtYWlsLmNvbSIsIm90cCI6IjA5NzY1OCIsImlhdCI6MTcxNTI3NTAzNiwiZXhwIjoxNzE1Mjc1MDc2fQ.ZXoY3mO7hOWZZMt6yN_Atil1BfZjjHDr9QGQXRzWnDU
 ###
 POST http://localhost:6868/api/auth/login
 Content-Type: application/json
@@ -84,7 +106,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
 
 
 ###
-POST http://localhost:6868/api/product/search
+POST https://api-summer-shop.vercel.app/api/product/search
 Content-Type: application/json
 
 {
@@ -163,7 +185,7 @@ Content-Type: application/json
 ###
 POST http://localhost:6868/api/filter
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxldmFudHVuZzE0MTEyMDAyQGdtYWlsLmNvbSIsIm90cCI6IjA5NzY1OCIsImlhdCI6MTcxNTI3NDE0NywiZXhwIjoxNzE1Mjc3NzQ3fQ.cMgPWsksVy2c_inxc_hwSRCDsZdfahEN4tDpzTlt6O8
 
 {
     "id_pro": 2, 
@@ -230,12 +252,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsImlzQWRta
 ###
 POST http://localhost:6868/api/cart
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4MTAzMzEyNH0.QDY2JCAAFHJTTj5_oEL2BI58xy1MvcKClEHyB6e8DYw
 
 {
-    "filter": 10,
-    "quantity": 2,
-    "subtotal": 2400
+    "filter": 112,
+    "quantity": 2
 }
 
 
