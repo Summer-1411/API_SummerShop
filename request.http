@@ -18,9 +18,10 @@ POST http://localhost:6868/api/auth/register_otp
 Content-Type: application/json
 
 {
-    "password": "levantung14112002@gmail.com",
+    "email": "levantung14112002@gmail.com",
+    "password": "123456",
     "username": "Summer",
-    "otp": "444422"
+    "otp": "562959"
 }
 ###
 //Đăng ký

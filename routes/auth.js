@@ -1,4 +1,5 @@
 const express = require('express')
+const { format } = require('date-fns');
 const router = express.Router()
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
@@ -75,8 +76,8 @@ router.post('/send_otp', async (req, res) => {
 			})
 		}
 		const rs = await sendMail(data)
-
-		await pool.query('INSERT INTO otp (otp, email) VALUES (?, ?)', [otp, email]);
+		currentDateTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+		await pool.query('INSERT INTO otp (otp, email, createAt) VALUES (?, ?, ?)', [otp, email, currentDateTime]);
 
 		return res.status(200).json({ success: true, message: "Gửi mã OTP thành công !", otp })
 
@@ -88,14 +89,17 @@ router.post('/send_otp', async (req, res) => {
 })
 
 router.post('/register_otp', async (req, res) => {
-	const { password, username, otp } = req.body
-	if (!password || !username || !otp) {
+	const { email, password, username, otp } = req.body
+	if (!email || !password || !username || !otp) {
 		return res
 			.status(400)
 			.json({ success: false, message: 'Missing parameters !' })
 	}
 	try {
 		let [valueOTP] = await pool.query(`SELECT * FROM otp WHERE otp = ?`, [otp]);
+		if(valueOTP[0]?.email !== email){
+			return res.status(400).json({ success: true, message: "Mã OTP không hợp lệ với email này !" })
+		}
 		if (valueOTP.length == 0) {
 			return res.status(500).json({ success: false, message: "Mã OTP không hợp lệ !" })
 		}
@@ -106,6 +110,7 @@ router.post('/register_otp', async (req, res) => {
 		if (checkTimeExpires) {
 			const hashedPassword = await argon2.hash(password)
 			const [result] = await pool.query('INSERT INTO user (email, password, username) VALUES (?, ?, ?)', [valueOTP[0]?.email, hashedPassword, username]);
+			await pool.query(`DELETE FROM otp WHERE email = ?`, [valueOTP[0]?.email]);
 			return res.status(200).json({ success: true, message: "Bạn đã đăng ký thành công" })
 		}
 
