@@ -76,7 +76,7 @@ router.post('/send_otp', async (req, res) => {
 		}
 		const rs = await sendMail(data)
 
-		await pool.query('INSERT INTO OTP (otp, email) VALUES (?, ?)', [otp, email]);
+		await pool.query('INSERT INTO otp (otp, email) VALUES (?, ?)', [otp, email]);
 
 		return res.status(200).json({ success: true, message: "Gửi mã OTP thành công !", otp })
 
