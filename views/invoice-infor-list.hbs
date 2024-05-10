@@ -1,0 +1,92 @@
+{{#each invoices}}
+<div>
+    <div style="text-align: center;">
+        <h1>Hoàng Tuấn Shop</h1>
+    </div>
+    <div>
+        <p class="muted" style="text-align: center;">Ngày đặt:  {{ this.createDate }}</p>
+    </div>
+</div>
+<div style="margin-bottom: 10px;">
+    <table>
+        <tr>
+            <td colspan="2">
+                <span>Mã hóa đơn: </span> <strong>{{this.id}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td><span>Khách hàng: </span> <strong>{{this.username}}</strong></td>
+            <td>
+                <span>Email: </span> <strong>{{this.email}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Số điện thoại: </span> <strong>{{this.phone}}</strong>
+            </td>
+            <td>
+                <span>Địa chỉ nhận hàng: </span> <strong>{{this.address}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Trạng thái thanh toán: </span> <strong>{{this.status}}</strong>
+            </td>
+            <td>
+                <span>Số tiền cần thanh toán: </span> <strong>{{this.total}}</strong>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+<table id="customers">
+    <thead>
+        <tr>
+            <th>Mã sản phầm</th>
+            <th>Tên sản phầm</th>
+            <th>Phân loại</th>
+            <th class="text-right">Số lượng</th>
+            <th class="text-right">Đơn giá</th>
+            <th class="text-right">Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {{#each this.products}}
+        <tr>
+            <td>{{this._id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.category}}</td>
+            <td class="text-right">{{this.quantity}}</td>
+            <td class="text-right">{{this.price}}</td>
+            <td class="text-right">{{this.total}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+
+            <td colspan="5" class="text-right">
+                <strong>
+                    Tổng cộng:
+                </strong>
+            </td>
+            <td class="text-right">
+                <strong>
+                    {{this.total}}
+                </strong>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+<div class="footer">
+    <p>Chúc quý khách có những trải nhiệm tốt cùng <strong>Hoàng Tuấn Shop</strong></p>
+    <p>Xin chân thành cảm ơn !</p>
+</div>
+<div class="muted" style="text-align: left; padding: 8px 0;">Thông tin cửa hàng: Đại học Công Nghiệp Hà Nội - 0373984007
+</div>
+<div style="text-align: center; background-color: #f5f5f5; padding: 4px;">
+    <p>HoangTuan Shop ©2024 Created by HT 0373984007</p>
+</div>
+<div style="margin: 20px 0; border: 2px dashed black; width: 100%;"></div>
+{{/each}}

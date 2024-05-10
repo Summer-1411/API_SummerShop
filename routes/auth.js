@@ -5,16 +5,11 @@ const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 const otpGenerator = require('otp-generator');
 const { verifyToken } = require('../middleware/verifyToken')
-// // const db = require('../common/connectDB')
-// const User = require('../models/User')
 
 const pool = require('../common/connectDB')
 const { sendMail, getBodyHTMLEmail } = require('../service/emailService');
 const { validExpiresTime } = require('../utils');
 
-// @route GET api/auth
-// @desc Check if user is logged in
-// @access Public
 
 router.get('/', verifyToken, async (req, res) => {
 
@@ -44,8 +39,8 @@ router.post('/send_otp', async (req, res) => {
 			return res.status(500).json({ success: false, message: "Email đã tồn tại !" })
 		}
 		if (otpExist.length > 0) {
-			// nếu mã chưa quá 15p
-			let checkValidResendEmail = validExpiresTime(otpExist[0]?.createAt)
+			// nếu mã chưa quá 3p
+			let checkValidResendEmail = validExpiresTime(otpExist[0]?.createAt, 3)
 			if (checkValidResendEmail) {
 				return res.status(201).json({ success: false, message: "Mã OTP đã được gửi. Vui lòng kiểm tra lại hộp thư email !" })
 			}

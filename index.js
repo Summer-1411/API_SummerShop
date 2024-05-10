@@ -14,12 +14,14 @@ const producerRoute = require('./routes/producer')
 const categoryRoute = require('./routes/category')
 const orderDetailroute = require('./routes/order_detail')
 const statRoute = require('./routes/stat')
+const invoiceRoute = require('./routes/invoices')
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 
 app.use("/images", express.static(path.join(__dirname, "public/images")));
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "public/images");
@@ -41,7 +43,8 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 app.get('/', (req, res) => {
     res.send('Hello World!')
   })
-  
+app.set('views', 'views');
+app.set('view engine', 'hbs');
 app.use('/api/auth', authRoute)
 app.use('/api/user', userRoute)
 app.use('/api/product', productRoute)
@@ -52,6 +55,7 @@ app.use('/api/cart', cartRoute)
 app.use('/api/order', orderRoute)
 app.use('/api/order_detail', orderDetailroute)
 app.use('/api/stat', statRoute)
+app.use('/api/invoices', invoiceRoute)
 
 
 const PORT = process.env.PORT || 6868

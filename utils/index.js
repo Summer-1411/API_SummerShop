@@ -1,4 +1,5 @@
- const validExpiresTime = (value) => {
+ const validExpiresTime = (value, time = 15) => {
+    console.log('time', time);
     if(!value){
         return false
     }
@@ -10,7 +11,7 @@
     // Tính toán khoảng thời gian giữa thời gian hiện tại và thời điểm cụ thể (tính bằng phút)
     const timeDiffInMinutes = (currentTime - specificTime) / (1000 * 60);
     // Kiểm tra xem thời gian đã vượt qua 15 phút chưa
-    if (timeDiffInMinutes > 15) {
+    if (timeDiffInMinutes > time) {
         return false
     } 
     return true

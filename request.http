@@ -8,8 +8,8 @@ POST http://localhost:6868/api/auth/send_otp
 Content-Type: application/json
 
 {
-    "email": "levantung14112002@gmail.com",
-    "username": "Summer"
+    "email": "hungdzkk2002@gmail.com",
+    "username": "HungDZ"
 }
 
 //Send OTP
@@ -18,11 +18,144 @@ POST http://localhost:6868/api/auth/register_otp
 Content-Type: application/json
 
 {
-    "email": "levantung14112002@gmail.com",
+    "email": "hungdzkk2002@gmail.com",
     "password": "123456",
-    "username": "Summer",
-    "otp": "562959"
+    "username": "HungDZ",
+    "otp": "321261"
 }
+
+
+
+
+###
+POST http://localhost:6868/api/invoices/send_mail
+Content-Type: application/json
+
+{
+    "invoice": {
+        "id": "47427759-9362-4f8e-bfe4-2d3733534e83",
+        "username": "Lê Văn Tùng",
+        "email": "levantung14112002@gmail.com",
+        "phone": "0373984007",
+        "address": "Ngõ 32/84/57 Đỗ Đức Dục Hà Nội",
+        "status": "Đã thanh toán",
+        "total": "100.000đ",
+        "createDate": "11/05/2002",
+        "products": [
+            {
+            "_id": 1234,
+            "name": "Iphone 15 Pro Max",
+            "category": "Black x 256GB",
+            "quantity": "1",
+            "price": "70.000đ",
+            "total": "70.000đ"
+            },
+            {
+            "_id": 3214,
+            "name": "Iphone 11 Pro Max",
+            "category": "Black x 256GB",
+            "quantity": "1",
+            "price": "30.000đ",
+            "total": "30.000đ"
+            }
+        ]
+    }
+}
+
+
+###
+POST http://localhost:6868/api/invoices/export_all
+Content-Type: application/json
+
+{
+    "invoices": [
+        {
+            "id": "47427759-9362-4f8e-bfe4-2d3733534e83",
+            "username": "Lê Văn Tùng",
+            "createDate": "11/05/2002",
+            "email": "levantung14112002@gmail.com",
+            "phone": "0373984007",
+            "address": "Ngõ 32/84/57 Đỗ Đức Dục Hà Nội",
+            "status": "Đã thanh toán",
+            "total": "100.000đ",
+            "products": [
+                {
+                    "_id": 1234,
+                    "name": "Iphone 15 Pro Max",
+                    "category": "Black x 256GB",
+                    "quantity": "1",
+                    "price": "70.000đ",
+                    "total": "70.000đ"
+                },
+                {
+                    "_id": 3214,
+                    "name": "Iphone 11 Pro Max",
+                    "category": "Black x 256GB",
+                    "quantity": "1",
+                    "price": "30.000đ",
+                    "total": "30.000đ"
+                }
+            ]
+        },
+        {
+            "id": "1afdd2fa-6353-437c-a923-e43baac506f4",
+            "username": "Lê Văn Tùng 1",
+            "createDate": "11/05/2002",
+            "email": "levantung14112002@gmail.com 1",
+            "phone": "0373984007",
+            "address": "Ngõ 32/84/57 Đỗ Đức Dục Hà Nội",
+            "status": "Đã thanh toán",
+            "total": "100.000đ",
+            "products": [
+                {
+                    "_id": 1234,
+                    "name": "Iphone 15 Pro Max",
+                    "category": "Black x 256GB",
+                    "quantity": "1",
+                    "price": "70.000đ",
+                    "total": "70.000đ"
+                },
+                {
+                    "_id": 3214,
+                    "name": "Iphone 11 Pro Max",
+                    "category": "Black x 256GB",
+                    "quantity": "1",
+                    "price": "30.000đ",
+                    "total": "30.000đ"
+                }
+            ]
+        },
+        {
+            "id": "59c216f8-7471-4ec2-a527-ab3641dc49aa",
+            "username": "Lê Văn Tùng 2",
+            "createDate": "11/05/2002",
+            "email": "levantung14112002@gmail.com 1",
+            "phone": "0373984007",
+            "address": "Ngõ 32/84/57 Đỗ Đức Dục Hà Nội",
+            "status": "Đã thanh toán",
+            "total": "100.000đ",
+            "products": [
+                {
+                    "_id": 1234,
+                    "name": "Iphone 15 Pro Max",
+                    "category": "Black x 256GB",
+                    "quantity": "1",
+                    "price": "70.000đ",
+                    "total": "70.000đ"
+                },
+                {
+                    "_id": 3214,
+                    "name": "Iphone 11 Pro Max",
+                    "category": "Black x 256GB",
+                    "quantity": "1",
+                    "price": "30.000đ",
+                    "total": "30.000đ"
+                }
+            ]
+        }
+    ]
+}
+
 ###
 //Đăng ký
 POST http://localhost:6868/api/auth/register
