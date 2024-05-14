@@ -39,8 +39,8 @@ router.post('/send_otp', async (req, res) => {
 			return res.status(500).json({ success: false, message: "Email đã tồn tại !" })
 		}
 		if (otpExist.length > 0) {
-			// nếu mã chưa quá 3p
-			let checkValidResendEmail = validExpiresTime(otpExist[0]?.createAt, 3)
+			// nếu mã chưa quá 2p
+			let checkValidResendEmail = validExpiresTime(otpExist[0]?.createAt, 2)
 			if (checkValidResendEmail) {
 				return res.status(201).json({ success: false, message: "Mã OTP đã được gửi. Vui lòng kiểm tra lại hộp thư email !" })
 			}

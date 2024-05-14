@@ -8,8 +8,8 @@ POST http://localhost:6868/api/auth/send_otp
 Content-Type: application/json
 
 {
-    "email": "hungdzkk2002@gmail.com",
-    "username": "HungDZ"
+    "email": "anhducle862002@gmail.com",
+    "username": "anhducle862002"
 }
 
 //Send OTP
@@ -32,34 +32,32 @@ POST http://localhost:6868/api/invoices/send_mail
 Content-Type: application/json
 
 {
-    "invoice": {
-        "id": "47427759-9362-4f8e-bfe4-2d3733534e83",
-        "username": "Lê Văn Tùng",
-        "email": "levantung14112002@gmail.com",
-        "phone": "0373984007",
-        "address": "Ngõ 32/84/57 Đỗ Đức Dục Hà Nội",
-        "status": "Đã thanh toán",
-        "total": "100.000đ",
-        "createDate": "11/05/2002",
-        "products": [
-            {
-            "_id": 1234,
-            "name": "Iphone 15 Pro Max",
-            "category": "Black x 256GB",
-            "quantity": "1",
-            "price": "70.000đ",
-            "total": "70.000đ"
-            },
-            {
-            "_id": 3214,
-            "name": "Iphone 11 Pro Max",
-            "category": "Black x 256GB",
-            "quantity": "1",
-            "price": "30.000đ",
-            "total": "30.000đ"
-            }
-        ]
-    }
+    "id": "47427759-9362-4f8e-bfe4-2d3733534e83",
+    "username": "Lê Văn Tùng",
+    "email": "levantung14112002@gmail.com",
+    "phone": "0373984007",
+    "address": "Ngõ 32/84/57 Đỗ Đức Dục Hà Nội",
+    "status": "Đã thanh toán",
+    "total": "100.000đ",
+    "createDate": "11/05/2002",
+    "products": [
+        {
+        "_id": 1234,
+        "name": "Iphone 15 Pro Max",
+        "category": "Black x 256GB",
+        "quantity": "1",
+        "price": "70.000đ",
+        "total": "70.000đ"
+        },
+        {
+        "_id": 3214,
+        "name": "Iphone 11 Pro Max",
+        "category": "Black x 256GB",
+        "quantity": "1",
+        "price": "30.000đ",
+        "total": "30.000đ"
+        }
+    ]
 }
 
 
