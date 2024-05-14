@@ -29,7 +29,7 @@ let getBodyHTMLEmail = (dataSend) => {
         <h3>Xin chào ${dataSend.username}!</h3>
         <p>Chúng tôi rất vui vì đã đăng ký tài khoản trên cửa hàng HoangTuanShop.</p>
         <p>Sau đây là tin xác thực tài khoản của bạn để hoàn tất quá trình đăng ký</p>
-        <p>Mã này sẽ hết hiệu lực trong vòng 15 phút.</p>
+        <p>Mã này sẽ hết hiệu lực trong vòng 3 phút.</p>
         <div>Xin chân thành cảm ơn!</div>
         <div><p>Mã xác thực OTP: <b>${dataSend.otp}</b></p></div>
     `

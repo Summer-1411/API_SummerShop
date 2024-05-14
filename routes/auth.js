@@ -36,13 +36,13 @@ router.post('/send_otp', async (req, res) => {
 		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ?`, [email]);
 		const [otpExist] = await pool.query(`SELECT * FROM otp WHERE email = ? ORDER BY createAt DESC`, [email]);
 		if (userExist.length > 0) {
-			return res.status(500).json({ success: false, message: "Email đã tồn tại !" })
+			return res.status(400).json({ success: false, message: "Email đã tồn tại !" })
 		}
 		if (otpExist.length > 0) {
 			// nếu mã chưa quá 2p
 			let checkValidResendEmail = validExpiresTime(otpExist[0]?.createAt, 2)
 			if (checkValidResendEmail) {
-				return res.status(201).json({ success: false, message: "Mã OTP đã được gửi. Vui lòng kiểm tra lại hộp thư email !" })
+				return res.status(400).json({ success: false, message: "Mã OTP đã được gửi. Vui lòng kiểm tra lại hộp thư email !" })
 			}
 		}
 
@@ -74,7 +74,7 @@ router.post('/send_otp', async (req, res) => {
 		currentDateTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 		await pool.query('INSERT INTO otp (otp, email, createAt) VALUES (?, ?, ?)', [otp, email, currentDateTime]);
 
-		return res.status(200).json({ success: true, message: "Gửi mã OTP thành công !", otp })
+		return res.status(200).json({ success: true, message: "Gửi mã OTP thành công !" })
 
 
 	} catch (error) {
