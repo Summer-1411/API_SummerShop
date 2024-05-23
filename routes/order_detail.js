@@ -6,7 +6,7 @@ const pool = require('../common/connectDB')
 
 router.get("/:id_order", verifyToken, async(req, res) => {
     try {
-        const query =  `SELECT order_detail.id, order_detail.id_filter, order_detail.quantity, filter.size, filter.img, filter.color, filter.price, product.name
+        const query =  `SELECT filter.id_pro, order_detail.id, order_detail.id_filter, order_detail.quantity, filter.size, filter.img, filter.color, filter.price, product.name
                         FROM order_detail INNER JOIN filter ON order_detail.id_filter = filter.id INNER JOIN product ON product.id = filter.id_pro
                         WHERE id_order = ?`;
         const [products] = await pool.query(query, req.params.id_order);

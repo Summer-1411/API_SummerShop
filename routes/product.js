@@ -27,7 +27,7 @@ router.post("/search", async (req, res) => {
     // }
     let {sample, pageInfo, orders} = req.body
 
-    console.log('body', orders?.property);
+    console.log('sample', sample);
     try {
         let sql = "SELECT * FROM product WHERE 1=1 "
         + ` AND (${sample?.name ? `upper(name) like UPPER("%${sample?.name}%")` : "1=1"}) `
