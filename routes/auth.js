@@ -160,6 +160,7 @@ router.post('/login', async (req, res) => {
 		}
 
 
+
 		// Username found
 		const passwordValid = await argon2.verify(userExist[0].password, password)
 		if (!passwordValid)
@@ -176,6 +177,8 @@ router.post('/login', async (req, res) => {
 
 		// All good
 		// Return token
+		delete userExist[0].password
+		delete userExist[0].deleted
 		const accessToken = jwt.sign({
 			id: userExist[0].id,
 			isAdmin: userExist[0].isAdmin

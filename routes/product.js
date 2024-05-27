@@ -8,6 +8,17 @@ const { verifyToken,
 
 const pool = require('../common/connectDB')
 
+router.get("/check", async (req, res) => {
+
+    try {
+       console.log('123');
+        return res.redirect('http://localhost:3001')
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error !" })
+    }
+})
+
 router.post("/search", async (req, res) => {
     // let data = {
     //     sample: {

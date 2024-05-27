@@ -28,7 +28,7 @@ router.post('/create/', verifyToken,async (req, res) => {
 router.get('/by-product/:id',async (req, res) => {
     
     try {
-        let [feedbacks] = await pool.execute(`SELECT * FROM feedback WHERE id_product = ?`, [req.params.id]);
+        let [feedbacks] = await pool.execute(`SELECT fb.*, u.email, u.avatar, u.username FROM feedback fb INNER JOIN user u ON fb.id_user = u.id WHERE id_product = ?`, [req.params.id]);
         return res.status(200).json({ success: true, data: feedbacks })
     } catch (error) {
         console.log(error);
@@ -40,6 +40,7 @@ router.get('/by-product/:id',async (req, res) => {
 //Get đánh giá sản phẩm
 router.get('/by-user/', verifyToken,async (req, res) => {
     const userId = req.user.id;
+    console.log('userId',userId);
     try {
         let [feedbacks] = await pool.execute(`SELECT * FROM feedback WHERE id_user = ?`, [userId]);
         return res.status(200).json({ success: true, data: feedbacks })

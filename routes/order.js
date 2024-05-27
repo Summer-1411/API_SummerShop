@@ -47,13 +47,12 @@ router.post('/', verifyToken, async (req, res) => {
             , [req.user.id, req.body.fullname, req.body.phone, req.body.address, req.body.methodShip, req.body.total, req.body.note]);
         const products = req.body.products
         const values1 = products.map(item => [result.insertId, item.id_filter, item.quantity]);
-        //const values1 = products.map(item => [item.id_filter, item.quantity]);
-        //console.log(products);
+
         await updateFiltersQuantities(products)
         const sql = 'INSERT INTO order_detail (id_order, id_filter, quantity) VALUES ?';
         const [result1] = await pool.query(sql, [values1]);
 
-        //console.log(result); // { affectedRows: 3, insertId: 0, warningStatus: 0 }
+        
         return res.status(200).json({ success: true, message: 'Đặt hàng thành công' })
     } catch (error) {
         console.log(error)

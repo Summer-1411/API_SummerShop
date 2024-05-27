@@ -498,3 +498,30 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
 GET http://localhost:6868/api/stat/count
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY4NDMwNTMxNH0._mZUO9ghw-jtk3rD0bUFUPjwLx9xyzm2cpIfxIfwCiI
+
+
+
+###
+POST http://localhost:6868/api/feedback/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+
+{
+    "idProduct": 34, 
+    "idOrder": 38, 
+    "rate": 5,
+    "description": "Sản phẩm tuyệt vời 23",
+    "img": "img.img"
+}
+
+###
+GET http://localhost:6868/api/feedback/by-product/26
+
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
+
+
+###
+GET http://localhost:6868/api/feedback/by-user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRtaW4iOjEsImlhdCI6MTY3ODg2NzA3OH0.DkwthZ_rA0DPgr-GhLB5xfGa9TgvrRVY2cxTkNTLJzc
