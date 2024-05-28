@@ -29,7 +29,20 @@ let getBodyHTMLEmail = (dataSend) => {
         <h3>Xin chào ${dataSend.username}!</h3>
         <p>Chúng tôi rất vui vì đã đăng ký tài khoản trên cửa hàng HoangTuanShop.</p>
         <p>Sau đây là tin xác thực tài khoản của bạn để hoàn tất quá trình đăng ký</p>
-        <p>Mã này sẽ hết hiệu lực trong vòng 3 phút.</p>
+        <p>Mã này sẽ hết hiệu lực trong vòng 15 phút.</p>
+        <div>Xin chân thành cảm ơn!</div>
+        <div><p>Mã xác thực OTP: <b>${dataSend.otp}</b></p></div>
+    `
+    return result;
+} 
+
+let getBodyHTMLForgotPassword = (dataSend) => {
+    let result =
+        `
+        <h3>Xin chào ${dataSend.email}!</h3>
+        <p>Chúng tôi nhận được yêu cầu lấy lại mật khẩu của bạn trên cửa hàng HoangTuanShop.</p>
+        <p>Nếu thực sự là bạn. Vui lòng nhập mã OTP để thực hiện quá trình lấy lại mật khẩu</p>
+        <p>Mã này sẽ hết hiệu lực trong vòng 15 phút.</p>
         <div>Xin chân thành cảm ơn!</div>
         <div><p>Mã xác thực OTP: <b>${dataSend.otp}</b></p></div>
     `
@@ -40,7 +53,7 @@ let getBodyHTMLEmailCancelOrder = (dataSend) => {
     let result = 
         `
         <h3>Xin chào ${dataSend.username}!</h3>
-        <p>Bạn nhận được email vì đơn hàng của bạn đã không thể hoàn thành do ${dataSend.reason}</p>
+        <p>Bạn nhận được email vì đơn hàng của bạn đã không thể hoàn thành vì lí do ${dataSend.reason}</p>
         <p>Chúng tôi rất xin lỗi về sự cố lần này</p>
         <div>Xin chân thành cảm ơn!</div>
     `
@@ -52,5 +65,6 @@ let getBodyHTMLEmailCancelOrder = (dataSend) => {
 module.exports = {
     sendMail,
     getBodyHTMLEmail,
-    getBodyHTMLEmailCancelOrder
+    getBodyHTMLEmailCancelOrder,
+    getBodyHTMLForgotPassword
 }

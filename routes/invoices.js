@@ -46,8 +46,11 @@ router.get('/export/:id', async function (req, res) {
 router.post('/export_id', async function (req, res) {
 
     const invoice = req.body
+
+    console.log('invoice',invoice);
     const htmlContent = Layout(SinglePage(invoice))
 
+    console.log('htmlContent',htmlContent);
     const options = { format: 'Letter' };
     createFilePdf(htmlContent, options, res)
 
@@ -71,6 +74,7 @@ router.post('/export_all', async function (req, res) {
 router.post('/send_mail', async function (req, res) {
     const invoice = req.body
     const htmlContent = Layout(SinglePage(invoice))
+    const options = { format: 'Letter' };
     sendMailInvoice(htmlContent, options, invoice, res)
 });
 

@@ -16,7 +16,7 @@ const SinglePage = (invoice) => {
                 </td>
             </tr>
             <tr>
-                <td><span>Khách hàng: </span> <strong>${invoice.username}</strong></td>
+                <td><span>Khách hàng: </span> <strong>${invoice.fullname}</strong></td>
                 <td>
                     <span>Email: </span> <strong>${invoice.email}</strong>
                 </td>
@@ -26,15 +26,15 @@ const SinglePage = (invoice) => {
                     <span>Số điện thoại: </span> <strong>${invoice.phone}</strong>
                 </td>
                 <td>
-                    <span>Địa chỉ nhận hàng: </span> <strong>${invoice.address}</strong>
+                    <span>Địa chỉ nhận hàng: </span> <strong>${invoice.shipping_address}</strong>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <span>Trạng thái thanh toán: </span> <strong>${invoice.status}</strong>
+                    <span>Trạng thái thanh toán: </span> <strong>${invoice.payment_method}</strong>
                 </td>
                 <td>
-                    <span>Số tiền cần thanh toán: </span> <strong>${invoice.amount}</strong>
+                    <span>Số tiền cần thanh toán: </span> <strong>${invoice.total_amount}</strong>
                 </td>
             </tr>
         </table>
@@ -55,7 +55,7 @@ const SinglePage = (invoice) => {
 
             ${invoice.products.map(product => (
                     `<tr>
-                        <td>${ product._id }</td>
+                        <td>${ product.id_pro }</td>
                         <td>${ product.name }</td>
                         <td>${ product.category } </td>
                         <td class="text-right">${ product.quantity }</td>
@@ -72,7 +72,7 @@ const SinglePage = (invoice) => {
                 </td>
                 <td class="text-right">
                     <strong>
-                        ${invoice.amount}
+                        ${invoice.total_amount}
                     </strong>
                 </td>
             </tr >

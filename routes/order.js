@@ -144,7 +144,7 @@ router.get("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
         //Đã huỷ bởi khách hàng
         const cancel = req.query.cancel;
 
-        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.note, orders.reason, orders.orderDate, orders.status, orders.shipping_address, orders.total_amount, user.email, user.username
+        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.note, orders.reason, orders.orderDate, orders.status, orders.payment_method, orders.shipping_address, orders.total_amount, user.email, user.username
                         FROM orders INNER JOIN user ON user.id = orders.id_user
                         WHERE status = ? ORDER BY orders.orderDate DESC`;
         if (confirm) {

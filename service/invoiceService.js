@@ -24,7 +24,7 @@ const sendMailInvoice = (htmlContent, options, invoice, res) => {
         }
         const data = {
             email: invoice.email,
-            subject: "Thông tin hóa đơn mua hàng",
+            subject: "Đơn hàng của bạn đã được duyệt. Sau đây là thông tin hóa đơn của bạn, chúc bạn một ngày tốt lành !",
             html: htmlContent
         }
         sendMail(data)

@@ -76,7 +76,8 @@ router.get("/pageDeleted", async (req, res) => {
 
 router.get("/search", async (req, res) => {
     try {
-        let [products] = await pool.execute(`SELECT * FROM product WHERE name = ? AND deleted = ?`, [req.query.name, 0]);
+     
+        let [products] = await pool.execute(`SELECT * FROM product WHERE upper(name) like UPPER("%${req.query.name}%") AND deleted = ?`, [0]);
         return res.status(200).json({ success: true, products})
     } catch (error) {
         console.log(error);

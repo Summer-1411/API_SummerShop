@@ -54,7 +54,7 @@ const Layout = (body) => {
                 padding-top: 12px;
                 padding-bottom: 12px;
                 text-align: left;
-                background-color: #04AA6D;
+                background-color: #3434c4;
                 color: white;
             }
     
