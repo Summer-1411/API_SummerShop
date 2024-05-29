@@ -49,6 +49,32 @@ let getBodyHTMLForgotPassword = (dataSend) => {
     return result;
 } 
 
+let getBodyHTMLChangePassword = (dataSend) => {
+    let result =
+        `
+        <h3>Xin chào ${dataSend.email}!</h3>
+        <p>Chúng tôi nhận được yêu cầu cập nhật mật khẩu của bạn trên cửa hàng HoangTuanShop.</p>
+        <p>Nếu thực sự là bạn. Vui lòng nhập mã OTP để thực hiện quá trình cập nhật mật khẩu</p>
+        <p>Mã này sẽ hết hiệu lực trong vòng 15 phút.</p>
+        <div>Xin chân thành cảm ơn!</div>
+        <div><p>Mã xác thực OTP: <b>${dataSend.otp}</b></p></div>
+    `
+    return result;
+} 
+
+let getBodyHTMLSoldOut = (dataSend) => {
+    let result =
+        `
+        <h3>Thông báo từ hệ thống</h3>
+        <p>Sản phẩm : ${dataSend.name}</p>
+        <p>Màu sắc : ${dataSend.color}</p>
+        <p>Dung lượng : ${dataSend.size}</p>
+        <p>Sản phẩm này hiện đã hết hàng có trong kho !. Vui lòng nhập thêm hàng để tránh gián đoạn quá trình bán hàng của cửa hàng</p>
+        <div>Xin chân thành cảm ơn!</div>
+    `
+    return result;
+} 
+
 let getBodyHTMLEmailCancelOrder = (dataSend) => {
     let result = 
         `
@@ -66,5 +92,7 @@ module.exports = {
     sendMail,
     getBodyHTMLEmail,
     getBodyHTMLEmailCancelOrder,
-    getBodyHTMLForgotPassword
+    getBodyHTMLForgotPassword,
+    getBodyHTMLChangePassword,
+    getBodyHTMLSoldOut
 }

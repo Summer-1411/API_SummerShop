@@ -3,7 +3,8 @@ const router = express.Router()
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require('../middleware/verifyToken')
 
 
-const pool = require('../common/connectDB')
+const pool = require('../common/connectDB');
+const { getBodyHTMLSoldOut, sendMail } = require('../service/emailService');
 
 
 //Khách hàng đặt hàng thì số lượng sản phẩm sẽ giảm đi
@@ -15,6 +16,23 @@ async function updateFiltersQuantities(products) {
                 'UPDATE filter SET quantity = quantity - ? WHERE id = ?',
                 [product.quantity, product.id_filter]
             );
+            let [detailProduct] = await pool.query(`SELECT filter.*,product.name FROM filter INNER join product on filter.id_pro = product.id where filter.id = ?`, [product.id_filter]);
+            if(detailProduct.length > 0){
+                if(detailProduct[0].quantity === 0){
+                    let data = {
+                        email: 'levantung14112002@gmail.com',
+                        subject: "Thông báo từ hệ thống kho bán hàng",
+                        html: getBodyHTMLSoldOut({
+                            name: detailProduct[0].name,
+                            color: detailProduct[0].color,
+                            size: detailProduct[0].size,
+                        })
+                    }
+                    await sendMail(data)
+                }
+            }
+            
+            console.log(detailProduct[0]);
         }
     } finally {
         connection.release();
@@ -30,6 +48,7 @@ async function updateFiltersQuantitiesByAdminCancel(products) {
                 'UPDATE filter SET quantity = quantity + ? WHERE id = ?',
                 [product.quantity, product.id_filter]
             );
+
         }
     } finally {
         connection.release();

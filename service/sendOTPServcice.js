@@ -2,7 +2,7 @@ const pool = require('../common/connectDB');
 const { TYPE_SEND_OTP } = require('../constant');
 const { validExpiresTime } = require('../utils');
 const { format } = require('date-fns');
-const { getBodyHTMLEmail, getBodyHTMLForgotPassword, sendMail } = require('./emailService');
+const { getBodyHTMLEmail, getBodyHTMLForgotPassword, sendMail, getBodyHTMLChangePassword } = require('./emailService');
 const otpGenerator = require('otp-generator');
 
 const sendOTP = async (res, type, email, username) => {
@@ -13,7 +13,7 @@ const sendOTP = async (res, type, email, username) => {
             if (userExist.length > 0) {
                 return res.status(400).json({ success: false, message: "Email đã tồn tại !" })
             }
-        }else if(type === TYPE_SEND_OTP.FORGOT_PASSWORD){
+        }else if(type === TYPE_SEND_OTP.FORGOT_PASSWORD || type === TYPE_SEND_OTP.CHANGE_PASSWORD){
             if (userExist.length === 0) {
                 return res.status(400).json({ success: false, message: "Tài khoản email không tồn tại !" })
             }
@@ -50,7 +50,7 @@ const sendOTP = async (res, type, email, username) => {
                     otp: otp
                 })
             }
-        }else if(TYPE_SEND_OTP.FORGOT_PASSWORD) {
+        }else if(type === TYPE_SEND_OTP.FORGOT_PASSWORD) {
             data = {
                 email: email,
                 subject: "Lấy lại mật khẩu",
@@ -59,7 +59,16 @@ const sendOTP = async (res, type, email, username) => {
                     otp: otp
                 })
             }
-        }
+        }else if(type === TYPE_SEND_OTP.CHANGE_PASSWORD){
+			data = {
+                email: email,
+                subject: "Cập nhật mật khẩu",
+                html: getBodyHTMLChangePassword({
+                    email: email,
+                    otp: otp
+                })
+            }
+		}
 		 
 		const rs = await sendMail(data)
 		currentDateTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');

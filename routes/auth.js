@@ -47,7 +47,78 @@ router.post('/send_otp_forgot', async (req, res) => {
 	sendOTP(res, TYPE_SEND_OTP.FORGOT_PASSWORD, email)
 })
 
+router.post('/check-change-password', verifyToken, async (req, res) => {
+	const { oldPassword } = req.body
+	const idUser = req.user.id
+	if (!oldPassword) {
+		return res
+			.status(400)
+			.json({ success: false, message: 'Thiếu tham số  !' })
+	}
+	try {
+		const [userExist] = await pool.query(`SELECT * FROM user WHERE id = ? AND deleted = ?`, [idUser, 0]);
+		if (userExist.length === 0) {
+			return res
+				.status(400)
+				.json({ success: false, message: 'Tài khoản không tồn tại !' })
+		}
+		// id found
+		const passwordValid = await argon2.verify(userExist[0].password, oldPassword)
+		if (!passwordValid)
+			return res
+				.status(400)
+				.json({ success: false, message: 'Mật khẩu cũ không chính xác' })
+		sendOTP(res, TYPE_SEND_OTP.FORGOT_PASSWORD, userExist[0].email)
+		// return res
+		// 		.status(200)
+		// 		.json({ success: true, message: 'Quá đỉnh !' })
 
+	} catch (error) {
+		console.log(error)
+		res.status(500).json({ success: false, message: 'Internal server error' })
+	}
+})
+
+router.post('/save-change-password', verifyToken, async (req, res) => {
+	const { newPassword, otp } = req.body
+	const idUser = req.user.id
+	if (!newPassword || !otp) {
+		return res
+			.status(400)
+			.json({ success: false, message: 'Missing parameters !' })
+	}
+	try {
+		const [userExist] = await pool.query(`SELECT * FROM user WHERE id = ? AND deleted = ?`, [idUser, 0]);
+		if (userExist.length === 0) {
+			return res
+				.status(400)
+				.json({ success: false, message: 'Tài khoản không tồn tại !' })
+		}
+		let [valueOTP] = await pool.query(`SELECT * FROM otp WHERE otp = ? ORDER BY createAt DESC`, [otp]);
+		if (valueOTP[0]?.email !== userExist[0].email) {
+			return res.status(400).json({ success: true, message: "Mã OTP không hợp lệ với email này !" })
+		}
+		if (valueOTP.length == 0) {
+			return res.status(500).json({ success: false, message: "Mã OTP không hợp lệ !" })
+		}
+		console.log(valueOTP);
+		let checkTimeExpires = validExpiresTime(valueOTP[0]?.createAt)
+		console.log('check checkTimeExpires', checkTimeExpires);
+
+		if (checkTimeExpires) {
+			const hashedPassword = await argon2.hash(newPassword)
+			let currentDateTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+			const [result] = await pool.query('UPDATE user set password = ?, updateAt=? WHERE email = ?', [hashedPassword, currentDateTime, valueOTP[0]?.email]);
+			await pool.query(`DELETE FROM otp WHERE email = ?`, [valueOTP[0]?.email]);
+			return res.status(200).json({ success: true, message: "Bạn đã đổi mật khẩu thành công" })
+		}
+
+		return res.status(400).json({ success: true, message: "Mã OTP đã hết hạn !" })
+	} catch (error) {
+		console.log('error',error);
+		return res.status(500).json({ success: false, message: "Internal server error" })
+	}
+})
 
 router.post('/forgot-password', async (req, res) => {
 	const { email, password, otp } = req.body
@@ -58,7 +129,7 @@ router.post('/forgot-password', async (req, res) => {
 	}
 	try {
 		let [valueOTP] = await pool.query(`SELECT * FROM otp WHERE otp = ?`, [otp]);
-		if(valueOTP[0]?.email !== email){
+		if (valueOTP[0]?.email !== email) {
 			return res.status(400).json({ success: true, message: "Mã OTP không hợp lệ với email này !" })
 		}
 		if (valueOTP.length == 0) {
@@ -91,7 +162,7 @@ router.post('/register_otp', async (req, res) => {
 	}
 	try {
 		let [valueOTP] = await pool.query(`SELECT * FROM otp WHERE otp = ?`, [otp]);
-		if(valueOTP[0]?.email !== email){
+		if (valueOTP[0]?.email !== email) {
 			return res.status(400).json({ success: true, message: "Mã OTP không hợp lệ với email này !" })
 		}
 		if (valueOTP.length == 0) {
