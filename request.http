@@ -348,6 +348,15 @@ Content-Type: application/json
 GET http://localhost:6868/api/producer
 Content-Type: application/json
 
+###
+POST http://localhost:6868/api/category/search
+Content-Type: application/json
+
+{
+    "status": "0"
+}
+
+
 
 
 ###

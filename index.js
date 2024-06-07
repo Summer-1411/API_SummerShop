@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const multer = require("multer")
+const crypto = require('crypto');
 const path = require("path")
 
 const authRoute = require('./routes/auth')
@@ -23,6 +24,8 @@ app.use(cors())
 
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
+// const hash = crypto.createHmac('SHA256', "ecd8a7b628c402eaaa8ac78b515fb0f6d3dae74fcf25532e893ee3d22f4ef18d").update("amount=5000&cancelUrl=http://localhost:3001/&description=VQRIO123&orderCode=200&returnUrl=http://localhost:3001/").digest('hex');
+// console.log('const', hash);
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "public/images");
