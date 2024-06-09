@@ -34,7 +34,8 @@ router.get("/count/deleted", verifyTokenAndAdmin, async (req, res) => {
 })
 router.get("/search", async (req, res) => {
     try {
-        let [users] = await pool.execute(`SELECT * FROM user WHERE username = ? AND deleted = ?`, [req.query.name, 0]);
+        // upper(name) like UPPER("%${req.query.name}%")
+        let [users] = await pool.execute(`SELECT * FROM user WHERE upper(username) like UPPER("%${req.query.name}%") AND deleted = ?`, [0]);
         return res.status(200).json({ success: true, users})
     } catch (error) {
         console.log(error);

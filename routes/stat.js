@@ -8,6 +8,51 @@ const { verifyToken,
 
 const pool = require('../common/connectDB')
 
+router.post("/revenue", verifyTokenAndAdmin,async(req, res) => {
+    try {
+        const {startDate, endDate} = req.body
+        let sqlSum = `SELECT DATE_FORMAT(orderDate, '%Y-%m') AS month, SUM(total_amount) AS totalSales, status 
+        FROM orders 
+        WHERE STATUS in (-1,2) 
+            AND orderDate BETWEEN "${startDate}-01" AND LAST_DAY("${endDate}-01")
+        GROUP BY DATE_FORMAT(orderDate, '%Y-%m'), status 
+        ORDER BY DATE_FORMAT(orderDate, '%Y-%m');`
+        
+
+        let sqlCount = `SELECT DATE_FORMAT(orderDate, '%Y-%m') AS month, COUNT(*) AS countOrder, status 
+        FROM orders 
+        WHERE STATUS in (-1,2) 
+            AND orderDate BETWEEN "${startDate}-01" AND LAST_DAY("${endDate}-01")
+        GROUP BY DATE_FORMAT(orderDate, '%Y-%m'), status 
+        ORDER BY DATE_FORMAT(orderDate, '%Y-%m');`
+        let [dataSum] = await pool.execute(sqlSum)
+        let [dataCount] = await pool.execute(sqlCount)
+        return res.status(200).json({success: true, message: "Thành công", data: {dataSum, dataCount}})
+    } catch (error) {
+        console.log('errr',error);
+        return res.status(500).json({success: false, message: "Internal server error !"})
+    }
+})
+
+
+router.post("/customer", verifyTokenAndAdmin,async(req, res) => {
+    try {
+        const {startDate, endDate} = req.body
+        let sql = `SELECT DATE_FORMAT(createAt, '%Y-%m') AS month, COUNT(*) AS countRegister 
+        FROM user 
+        WHERE createAt BETWEEN "${startDate}-01" AND LAST_DAY("${endDate}-01")
+        GROUP BY DATE_FORMAT(createAt, '%Y-%m') 
+        ORDER BY DATE_FORMAT(createAt, '%Y-%m');`
+        
+        let [data] = await pool.execute(sql)
+        return res.status(200).json({success: true, message: "Thành công", data})
+    } catch (error) {
+        console.log('errr',error);
+        return res.status(500).json({success: false, message: "Internal server error !"})
+    }
+})
+
+
 router.get("/count", verifyTokenAndAdmin,async(req, res) => {
     try {
         let [user] = await pool.execute(`SELECT COUNT(*) AS numberUser FROM user WHERE deleted = ?`, [0])

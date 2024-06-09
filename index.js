@@ -17,6 +17,7 @@ const orderDetailroute = require('./routes/order_detail')
 const statRoute = require('./routes/stat')
 const invoiceRoute = require('./routes/invoices')
 const feedbackRoute = require('./routes/feedback')
+const voucherRoute = require('./routes/voucher')
 
 const app = express()
 app.use(express.json())
@@ -61,6 +62,7 @@ app.use('/api/order_detail', orderDetailroute)
 app.use('/api/stat', statRoute)
 app.use('/api/invoices', invoiceRoute)
 app.use('/api/feedback', feedbackRoute)
+app.use('/api/voucher', voucherRoute)
 
 
 const PORT = process.env.PORT || 6868

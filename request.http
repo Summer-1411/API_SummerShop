@@ -345,6 +345,13 @@ GET http://localhost:6868/api/category
 Content-Type: application/json
 
 ###
+GET http://localhost:6868/api/voucher/check/VOUCHER_99
+Content-Type: application/json
+
+
+
+
+###
 GET http://localhost:6868/api/producer
 Content-Type: application/json
 

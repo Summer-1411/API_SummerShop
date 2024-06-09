@@ -84,9 +84,9 @@ const SinglePage = (invoice) => {
         <p>Chúc quý khách có những trải nhiệm tốt cùng <strong>HoangTuan Shop</strong></p>
         <p>Xin chân thành cảm ơn !</p>
     </div>
-    <div class="muted" style="text-align: left; padding: 8px 0;">Thông tin cửa hàng: Đại học Công Nghiệp Hà Nội - 0373984007</div>
+    <div class="muted" style="text-align: left; padding: 8px 0;">Thông tin cửa hàng: Thông tin cửa hàng: 16 ngõ 2 - Phố Nguyên Xá - Phường Minh Khai - Quận Bắc Từ Liêm - TP Hà Nội</div>
     <div style="text-align: center; background-color: #f5f5f5; padding: 4px;">
-        <p>HoangTuan Shop ©2024 Created by HT 0373984007</p>
+        <p>HoangTuan Shop ©2024 Created by HT 0394687543</p>
     </div>`
 }
 
