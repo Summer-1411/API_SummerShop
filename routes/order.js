@@ -2,10 +2,18 @@ const express = require('express')
 const router = express.Router()
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require('../middleware/verifyToken')
 
-
+const axios = require('axios');
 const pool = require('../common/connectDB');
 const { getBodyHTMLSoldOut, sendMail } = require('../service/emailService');
 
+
+//-1: Đơn hàng khách huỷ
+//0: Đang chờ xử ý
+//1: Đã duyệt đơn
+//2: Đã hoàn thành
+//-2: Không chấp nhận
+
+//10: Đang chờ thanh toán online
 
 //Khách hàng đặt hàng thì số lượng sản phẩm sẽ giảm đi
 async function updateFiltersQuantities(products) {
@@ -57,27 +65,86 @@ async function updateFiltersQuantitiesByAdminCancel(products) {
 
 //Nếu admin hoàn tác lại chức năng huỷ bỏ thì số lượng sản phẩm sẽ bị giảm như khi kháhc đặt
 
+//-1: Đơn hàng khách huỷ
+//0: Đang chờ xử ý
+//1: Đã duyệt đơn
+//2: Đã hoàn thành
+//-2: Không chấp nhận
+
+//10: Đang chờ thanh toán online
 
 
 router.post('/', verifyToken, async (req, res) => {
     try {
-        const query = `INSERT INTO orders (id_user, fullname, phone, shipping_address, shipping_method, total_amount, note) VALUES (?, ?, ?, ?, ?, ?, ?)`
+        const {
+            fullname,
+            phone,
+            address,
+            methodShip,
+            total,
+            note,
+            paymentMethod, // 1 khi nhận hàng - 2 online
+            voucherValue,
+        } = req.body;
+        
+        const statusOrder = paymentMethod === '1' ? 0 : 10 // status = 0, chờ xác nhận đơn thanh toán khi nhận hàng, status = 10 : chờ xử lý payment
+        const query = `INSERT INTO orders (id_user, fullname, phone, shipping_address, shipping_method, total_amount, note, payment_method, voucherValue, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
         const [result] = await pool.query(query
-            , [req.user.id, req.body.fullname, req.body.phone, req.body.address, req.body.methodShip, req.body.total, req.body.note]);
+            , [req.user.id, fullname, phone, address, methodShip, total, note, paymentMethod, voucherValue, statusOrder]);
+        
+        const orderId = result.insertId
         const products = req.body.products
         const values1 = products.map(item => [result.insertId, item.id_filter, item.quantity]);
-
         await updateFiltersQuantities(products)
         const sql = 'INSERT INTO order_detail (id_order, id_filter, quantity) VALUES ?';
         const [result1] = await pool.query(sql, [values1]);
+        if(paymentMethod === '1'){
+            return res.status(200).json({ success: true, message: 'Đặt hàng thành công' })
 
+        }
+        else if(paymentMethod === '2') {
+            console.log('check');
+            const payload = {
+                orderCode: result.insertId,
+                amount: req.body.total,
+                description: `DON HANG ${result.insertId}`,
+                buyerName: fullname,
+                buyerEmail: '',
+                buyerPhone: phone,
+                buyerAddress: address,
+                items: products,
+
+            }
+            const {data: dataResponse} = await axios.post('http://localhost:6868/api/payment/create-payment', payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log('link',dataResponse.data)
+            //  res.redirect(dataResponse.data)
+            return res.status(200).json({ success: true, message: 'Đặt hàng thành công', redirectUrl:dataResponse.data  })
+
+        }
         
-        return res.status(200).json({ success: true, message: 'Đặt hàng thành công' })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Có lỗi xảy ra trong quá trình xử lý !' })
     }
 })
+
+router.get("/cancel-payment/:id", async (req, res) => {
+    try {
+        const id = req.params.id
+        // const [order] = await pool.query(`DELETE FROM orders WHERE id = ?`, [id]);
+		// res.json({ success: true, message: "Giỏ hàng trống"})
+        return res.redirect('http://localhost:3001/')
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ success: false, message: 'Internal server error' })
+    }
+})
+
+
 router.get("/byCustomer", verifyToken, async (req, res) => {
     try {
         //Đã duyệt
@@ -87,7 +154,8 @@ router.get("/byCustomer", verifyToken, async (req, res) => {
         //Đã huỷ bởi khách hàng
         const cancel = req.query.cancel;
 
-        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.orderDate, orders.status, orders.note, orders.reason, orders.shipping_address, orders.total_amount
+        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.orderDate, orders.status, orders.note, 
+                        orders.reason, orders.shipping_address, orders.total_amount, orders.voucherValue, orders.payment_method
                         FROM orders
                         WHERE id_user = ? AND status = ? ORDER BY orders.orderDate DESC`;
 
@@ -144,11 +212,6 @@ router.get("/byCustomer", verifyToken, async (req, res) => {
 
 
 
-//-1: Đơn hàng khách huỷ
-//0: Đang chờ xử ý
-//1: Đã duyệt đơn
-//2: Đã hoàn thành
-//-2: Không chấp nhận
 
 //Get đơn hàng by Admin
 
@@ -164,7 +227,7 @@ router.get("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
         //Đã huỷ bởi khách hàng
         const cancel = req.query.cancel;
 
-        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.note, orders.reason, orders.orderDate, orders.status, orders.payment_method, orders.shipping_address, orders.total_amount, user.email, user.username
+        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.note, orders.reason, orders.orderDate, orders.status, orders.payment_method, orders.shipping_address, orders.voucherValue,orders.total_amount, user.email, user.username
                         FROM orders INNER JOIN user ON user.id = orders.id_user
                         WHERE status = ? ORDER BY orders.orderDate DESC`;
         if (confirm) {

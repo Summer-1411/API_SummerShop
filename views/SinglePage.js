@@ -31,10 +31,10 @@ const SinglePage = (invoice) => {
             </tr>
             <tr>
                 <td>
-                    <span>Trạng thái thanh toán: </span> <strong>${invoice.payment_method}</strong>
+                    <span>Trạng thái thanh toán: </span> <strong>${invoice.payment_method === '2' ? "Đã thanh toán":"Thanh toán khi nhận hàng"}</strong>
                 </td>
                 <td>
-                    <span>Số tiền cần thanh toán: </span> <strong>${invoice.total_amount}</strong>
+                    <span>Số tiền cần thanh toán: </span> <strong>${invoice.payment_method === '2' ? 0 : invoice.total_amount}</strong>
                 </td>
             </tr>
         </table>
@@ -64,7 +64,19 @@ const SinglePage = (invoice) => {
                    </tr>`
                 )).join('')
             }
-            <tr >
+            <tr>
+                    <td colspan="5" class="text-right">
+                        <strong>
+                            Giảm giá:
+                        </strong>
+                    </td>
+                    <td class="text-right">
+                        <strong>
+                            - ${invoice.voucherValue}
+                        </strong>
+                    </td>
+                </tr>
+            <tr>
                 <td colspan="5" class="text-right">
                     <strong>
                         Tổng cộng:
@@ -75,7 +87,7 @@ const SinglePage = (invoice) => {
                         ${invoice.total_amount}
                     </strong>
                 </td>
-            </tr >
+            </tr>
             
 
         </tbody >

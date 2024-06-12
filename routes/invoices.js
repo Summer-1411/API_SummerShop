@@ -14,6 +14,9 @@ router.get('/', function (req, res) {
         error: req.query['error'],
     });
 });
+
+
+
 router.get('/:id', function (req, res) {
     const invoice = invoices.find(invoice => invoice.id === req.params['id']);
     console.log(req.params['id'], req.params['id']);

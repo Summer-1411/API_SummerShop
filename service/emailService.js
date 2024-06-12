@@ -18,7 +18,6 @@ const sendMail = asyncHandler(async ({ email, subject ,html }) => {
         subject: subject, // Subject line
         html: html, // html body
     });
-
     return info
 })
 

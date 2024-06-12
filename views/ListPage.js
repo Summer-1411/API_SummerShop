@@ -67,7 +67,18 @@ const ListPage = (invoices) => {
             )).join('')
         }
                 <tr>
-
+                    <td colspan="5" class="text-right">
+                        <strong>
+                            Giảm:
+                        </strong>
+                    </td>
+                    <td class="text-right">
+                        <strong>
+                            ${item.voucher}
+                        </strong>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="5" class="text-right">
                         <strong>
                             Tổng cộng:

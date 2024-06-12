@@ -18,6 +18,7 @@ const statRoute = require('./routes/stat')
 const invoiceRoute = require('./routes/invoices')
 const feedbackRoute = require('./routes/feedback')
 const voucherRoute = require('./routes/voucher')
+const paymentRoute = require('./routes/payment')
 
 const app = express()
 app.use(express.json())
@@ -25,8 +26,10 @@ app.use(cors())
 
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
-// const hash = crypto.createHmac('SHA256', "ecd8a7b628c402eaaa8ac78b515fb0f6d3dae74fcf25532e893ee3d22f4ef18d").update("amount=5000&cancelUrl=http://localhost:3001/&description=VQRIO123&orderCode=200&returnUrl=http://localhost:3001/").digest('hex');
-// console.log('const', hash);
+app.get('/redirect', (req, res) => {
+    // Thực hiện chuyển hướng đến URL mong muốn
+    res.redirect('http://localhost:3001/');
+  });
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "public/images");
@@ -63,6 +66,7 @@ app.use('/api/stat', statRoute)
 app.use('/api/invoices', invoiceRoute)
 app.use('/api/feedback', feedbackRoute)
 app.use('/api/voucher', voucherRoute)
+app.use('/api/payment', paymentRoute)
 
 
 const PORT = process.env.PORT || 6868
