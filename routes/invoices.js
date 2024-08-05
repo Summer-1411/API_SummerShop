@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { createFilePdf, sendMailInvoice } = require('../service/invoiceService');
 const { invoices } = require('../data/dataTest');
-const Layout = require('../views/layout');
+const Layout = require('../views/Layout');
 const SinglePage = require('../views/SinglePage');
 const ListPage = require('../views/ListPage');
 
