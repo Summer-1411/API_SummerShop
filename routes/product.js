@@ -88,8 +88,8 @@ router.get("/search", async (req, res) => {
 router.get("/detail/:id", async (req, res) => {
     try {
         let [product] = await pool.query(`SELECT * FROM product WHERE id = ? AND deleted = ?`, [req.params.id, 0]);
-        const [sizes] = await pool.query(`SELECT id,size FROM filter WHERE id_pro=? AND deleted=? GROUP BY size`, [req.params.id, 0])
-        const [colors] = await pool.query(`SELECT id,color,img FROM filter WHERE id_pro=? AND deleted=? GROUP BY color`, [req.params.id, 0])
+        const [sizes] = await pool.query(`SELECT id,size FROM filter WHERE id_pro=? AND deleted=? GROUP BY id, size`, [req.params.id, 0])
+        const [colors] = await pool.query(`SELECT id,color,img FROM filter WHERE id_pro=? AND deleted=? GROUP BY id, color`, [req.params.id, 0])
         // const [imgs] = await pool.execute(`SELECT id, img FROM filter WHERE id_pro=? GROUP BY color`, [req.params.id])
         return res.status(200).json({ success: true, product: product[0], sizes, colors })
     } catch (error) {
