@@ -3,7 +3,7 @@ const ListPage = (invoices) => {
         `
         <div>
             <div style="text-align: center;">
-                <h1>HoangTuan Shop</h1>
+                <h1>CoolFate Shop</h1>
             </div>
             <div>
                 <p class="muted" style="text-align: center;">Ngày đặt:  ${item.orderDate}</p>
@@ -94,13 +94,13 @@ const ListPage = (invoices) => {
             </tbody>
         </table>
         <div class="footer">
-            <p>Chúc quý khách có những trải nhiệm tốt cùng <strong>HoangTuan Shop</strong></p>
+            <p>Chúc quý khách có những trải nhiệm tốt cùng <strong>CoolFate Shop</strong></p>
             <p>Xin chân thành cảm ơn !</p>
         </div>
         <div class="muted" style="text-align: left; padding: 8px 0;">Thông tin cửa hàng: 16 ngõ 2 - Phố Nguyên Xá - Phường Minh Khai - Quận Bắc Từ Liêm - TP Hà Nội
         </div>
         <div style="text-align: center; background-color: #f5f5f5; padding: 4px;">
-            <p>HoangTuan Shop ©2024 Created by HT 0394687543</p>
+            <p>CoolFate Shop ©2024 Created by HT 0394687543</p>
         </div>
         <div style="margin: 20px 0; border: 2px dashed black; width: 100%;"></div>`
     )).join('')}`
