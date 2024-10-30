@@ -12,6 +12,8 @@ Content-Type: application/json
     "username": "anhducle862002"
 }
 
+
+
 //Send OTP
 ###
 POST http://localhost:6868/api/auth/register_otp

@@ -8,7 +8,7 @@ const path = require("path")
 const authRoute = require('./routes/auth')
 const userRoute = require('./routes/user')
 const productRoute = require('./routes/product')
-const filterRoute = require('./routes/filter')
+const productDetailRoute = require('./routes/productDetail')
 const cartRoute = require('./routes/cart')
 const orderRoute = require('./routes/order')
 const producerRoute = require('./routes/producer')
@@ -29,7 +29,7 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.get('/redirect', (req, res) => {
     // Thực hiện chuyển hướng đến URL mong muốn
     res.redirect('http://localhost:3001/');
-  });
+});
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "public/images");
@@ -50,13 +50,13 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
-  })
+})
 app.set('views', 'views');
 app.set('view engine', 'hbs');
 app.use('/api/auth', authRoute)
 app.use('/api/user', userRoute)
 app.use('/api/product', productRoute)
-app.use('/api/filter', filterRoute)
+app.use('/api/product_detail', productDetailRoute)
 app.use('/api/producer', producerRoute)
 app.use('/api/category', categoryRoute)
 app.use('/api/cart', cartRoute)
