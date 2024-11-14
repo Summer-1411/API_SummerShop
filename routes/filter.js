@@ -12,7 +12,7 @@ const pool = require('../common/connectDB')
 //GET filter theo id
 router.get('/find/:id', async (req, res) => {
     try {
-        const [filter] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND deleted=?`, [req.params.id, 0])
+        const [filter] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND status=?`, [req.params.id, 1])
         return res.status(200).json({ success: true, filter })
     } catch (error) {
         console.log(error);

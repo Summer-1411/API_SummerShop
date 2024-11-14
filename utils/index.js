@@ -1,6 +1,6 @@
- const validExpiresTime = (value, time = 15) => {
+const validExpiresTime = (value, time = 15) => {
     console.log('time', time);
-    if(!value){
+    if (!value) {
         return false
     }
     const specificTime = new Date(value);
@@ -13,9 +13,14 @@
     // Kiểm tra xem thời gian đã vượt qua 15 phút chưa
     if (timeDiffInMinutes > time) {
         return false
-    } 
+    }
     return true
 }
+
+function hasValue(variable) {
+    return variable !== undefined && variable !== null && variable !== '';
+}
 module.exports = {
-    validExpiresTime
+    validExpiresTime,
+    hasValue
 }
