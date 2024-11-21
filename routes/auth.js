@@ -20,7 +20,7 @@ router.get('/', verifyToken, async (req, res) => {
 		console.log({ user });
 		if (user.length === 0)
 			return res.status(400).json({ success: false, message: 'Không tìm thấy người dùng' })
-		res.json({ success: true, user: user[0] })
+		res.status(200).json({ success: true, user: user[0] })
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ success: false, message: 'Internal server error' })
@@ -115,7 +115,7 @@ router.post('/save-change-password', verifyToken, async (req, res) => {
 
 		return res.status(400).json({ success: true, message: "Mã OTP đã hết hạn !" })
 	} catch (error) {
-		console.log('error',error);
+		console.log('error', error);
 		return res.status(500).json({ success: false, message: "Internal server error" })
 	}
 })
@@ -222,7 +222,7 @@ router.post('/login', async (req, res) => {
 
 	try {
 		// Check for existing user
-		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ? AND deleted = ?`, [email, 0]);
+		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ? AND status = ?`, [email, 1]);
 		if (userExist.length === 0) {
 			return res
 				.status(400)
@@ -255,7 +255,7 @@ router.post('/login', async (req, res) => {
 		},
 			process.env.ACCESS_TOKEN_SECRET
 		)
-		res.json({
+		res.status(200).json({
 			success: true,
 			message: 'Bạn đã đăng nhập thành công',
 			user: userExist[0],

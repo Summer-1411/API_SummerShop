@@ -7,14 +7,14 @@ const mysql = require('mysql2/promise');
 // password: "FgF!kE5TxPPzhW!",
 // database: "freedb_my-shop"
 const pool = mysql.createPool({
-    host: "sql.freedb.tech",
-    user: "freedb_tunglv27",
-    password: "7cd9N!&Ta3?U@vN",
-    database: "freedb_db_shop_123"
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "db"
 })
 
 pool.getConnection((err, conn) => {
-    if(err){
+    if (err) {
         console.log(err);
     }
     console.log('success');

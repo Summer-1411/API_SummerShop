@@ -2,7 +2,7 @@ const SinglePage = (invoice) => {
     return `
     <div>
         <div style="text-align: center;">
-            <h1>CoolFate Shop</h1>
+            <h1>Summer Shop</h1>
         </div>
         <div>
             <p class="muted" style="text-align: center;">Ngày đặt: ${invoice.orderDate}</p>
@@ -31,7 +31,7 @@ const SinglePage = (invoice) => {
             </tr>
             <tr>
                 <td>
-                    <span>Trạng thái thanh toán: </span> <strong>${invoice.payment_method === '2' ? "Đã thanh toán":"Thanh toán khi nhận hàng"}</strong>
+                    <span>Trạng thái thanh toán: </span> <strong>${invoice.payment_method === '2' ? "Đã thanh toán" : "Thanh toán khi nhận hàng"}</strong>
                 </td>
                 <td>
                     <span>Số tiền cần thanh toán: </span> <strong>${invoice.payment_method === '2' ? 0 : invoice.total_amount}</strong>
@@ -54,16 +54,16 @@ const SinglePage = (invoice) => {
 
 
             ${invoice.products.map(product => (
-                    `<tr>
-                        <td>${ product.id_pro }</td>
-                        <td>${ product.name }</td>
-                        <td>${ product.category } </td>
-                        <td class="text-right">${ product.quantity }</td>
-                        <td class="text-right">${ product.price }</td>
-                        <td class="text-right">${ product.total }</td>
+        `<tr>
+                        <td>${product.id_pro}</td>
+                        <td>${product.name}</td>
+                        <td>${product.category} </td>
+                        <td class="text-right">${product.quantity}</td>
+                        <td class="text-right">${product.price}</td>
+                        <td class="text-right">${product.total}</td>
                    </tr>`
-                )).join('')
-            }
+    )).join('')
+        }
             <tr>
                     <td colspan="5" class="text-right">
                         <strong>
@@ -93,12 +93,12 @@ const SinglePage = (invoice) => {
         </tbody >
     </table >
     <div class="footer">
-        <p>Chúc quý khách có những trải nhiệm tốt cùng <strong>CoolFate Shop</strong></p>
+        <p>Chúc quý khách có những trải nhiệm tốt cùng <strong>Summer Shop</strong></p>
         <p>Xin chân thành cảm ơn !</p>
     </div>
-    <div class="muted" style="text-align: left; padding: 8px 0;">Thông tin cửa hàng: Thông tin cửa hàng: 16 ngõ 2 - Phố Nguyên Xá - Phường Minh Khai - Quận Bắc Từ Liêm - TP Hà Nội</div>
+    <div class="muted" style="text-align: left; padding: 8px 0;">Thông tin cửa hàng: 2Q8M+PM3, Đ. Phạm Hùng, Keangnam, Nam Từ Liêm, Hà Nội</div>
     <div style="text-align: center; background-color: #f5f5f5; padding: 4px;">
-        <p>CoolFate Shop ©2024 Created by HT 0394687543</p>
+        <p>Summer Shop ©2024 Created by HT 0373984007</p>
     </div>`
 }
 

@@ -6,12 +6,12 @@ const { verifyTokenAndAdmin } = require('../middleware/verifyToken');
 
 
 router.get('/', async (req, res) => {
-    try {
+	try {
 
 		const [producer] = await pool.execute(`SELECT * FROM producer`);
 		if (producer.length === 0)
 			return res.status(200).json({ success: false, producer: [] })
-		return res.json({ success: true, producer })
+		return res.status(200).json({ success: true, producer })
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ success: false, message: 'Internal server error' })
@@ -26,11 +26,11 @@ router.post('/search', async (req, res) => {
 			+ ` AND (${data?.name ? `upper(name) like UPPER("%${data?.name}%")` : "1=1"}) `
 			+ ` AND (${data?.status === 1 || data?.status === 0 ? `status = ${data?.status}` : "1=1"}) `
 
-			console.log('sql',sql);
+		console.log('sql', sql);
 		const [producer] = await pool.execute(sql);
 		if (producer.length === 0)
 			return res.status(200).json({ success: false, producer: [] })
-		return res.json({ success: true, producer })
+		return res.status(200).json({ success: true, producer })
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ success: false, message: 'Internal server error' })

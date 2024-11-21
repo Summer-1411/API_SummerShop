@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
 		const [category] = await pool.execute(`SELECT * FROM category`);
 		if (category.length === 0)
 			return res.status(200).json({ success: false, category: [] })
-		return res.json({ success: true, category })
+		return res.status(200).json({ success: true, category })
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ success: false, message: 'Internal server error' })
@@ -26,7 +26,7 @@ router.post('/search', async (req, res) => {
 		const [category] = await pool.execute(sql);
 		if (category.length === 0)
 			return res.status(200).json({ success: false, category: [] })
-		return res.json({ success: true, category })
+		return res.status(200).json({ success: true, category })
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ success: false, message: 'Internal server error' })
