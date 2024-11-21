@@ -1,5 +1,7 @@
 ###
-GET https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1
+GET http://localhost:6868/api/category
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsImlzQWRtaW4iOjAsImlhdCI6MTY4MTA1NTk5M30.bnD-lJ1J0Q0wOkP5Ng5vtzAy5M-C95hTZvg1OOTDUdk
 
 
 //Send OTP
@@ -305,12 +307,38 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzAsImlzQWRta
 
 ###
 GET http://localhost:3000/api/product
-Content-Type: application/json
+Content-Type: application/json  
 
 ###
-GET http://localhost:6868/api/product
+GET http://localhost:6868/api/v1/product
 Content-Type: application/json
 
+
+###
+GET http://localhost:6868/api/v1/filter/infor/99
+Content-Type: application/json
+
+
+
+###
+POST  http://localhost:6868/api/v1/filter/detail
+Content-Type: application/json
+
+{
+    "id": 48,
+    "size": "128GB",
+    "color": "Silver"
+}
+
+
+
+###
+POST  http://localhost:6868/api/v1/user/filter
+Content-Type: application/json
+
+{
+"email": "user123@gmail.com"
+}
 
 
 
@@ -399,6 +427,8 @@ Content-Type: application/json
 GET http://localhost:6868/api/cart
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsImlzQWRtaW4iOjAsImlhdCI6MTY4MTA1NTk5M30.bnD-lJ1J0Q0wOkP5Ng5vtzAy5M-C95hTZvg1OOTDUdk
+
+
 ###
 POST http://localhost:6868/api/cart
 Content-Type: application/json

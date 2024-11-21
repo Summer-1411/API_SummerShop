@@ -4,7 +4,7 @@ const cors = require('cors')
 const multer = require("multer")
 const crypto = require('crypto');
 const path = require("path")
-
+const cron = require('node-cron');
 const authRoute = require('./routes/auth')
 const userRoute = require('./routes/user')
 const productRoute = require('./routes/product')
@@ -20,9 +20,48 @@ const feedbackRoute = require('./routes/feedback')
 const voucherRoute = require('./routes/voucher')
 const paymentRoute = require('./routes/payment')
 
+///
+
+///api-v1
+const productController = require('./src/controller/ProductController')
+const filterController = require('./src/controller/FilterController')
+const userController = require('./src/controller/UserController');
+const apiLogController = require('./src/controller/ApiLogController');
+const firebaseTokenController = require('./src/controller/FirebaseTokenController');
+const logRequest = require('./middleware/logging');
+const startProcess = require('./src/process/logApi');
+
+const admin = require('firebase-admin');
+// const serviceAccount = require('./summer-309f4-08c43657ba69.json');
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(logRequest);
+
+// Khởi tạo Firebase Admin SDK
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+// });
+
+// Hàm gửi thông báo đến tất cả người dùng
+// function sendNotificationToAllUsers(productName) {
+//     const message = {
+//         notification: {
+//             title: "Sản phẩm mới!",
+//             body: `Chúng tôi vừa thêm sản phẩm mới: ${productName}`,
+//         },
+//         tokens: deviceTokens,
+//     };
+
+//     // Gửi thông báo qua Firebase Cloud Messaging
+//     admin.messaging().sendEachForMulticast(message)
+//         .then((response) => {
+//             console.log('Successfully sent message:', response);
+//         })
+//         .catch((error) => {
+//             console.error('Error sending message:', error);
+//         });
+// }
 
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
@@ -68,6 +107,16 @@ app.use('/api/feedback', feedbackRoute)
 app.use('/api/voucher', voucherRoute)
 app.use('/api/payment', paymentRoute)
 
+
+//api-v1
+app.use('/api/v1/product', productController)
+app.use('/api/v1/filter', filterController)
+app.use('/api/v1/user', userController)
+app.use('/api/v1/api-log', apiLogController)
+app.use('/api/v1/firebase-token', firebaseTokenController)
+
+
+startProcess()
 
 const PORT = process.env.PORT || 6868
 
