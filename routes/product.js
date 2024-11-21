@@ -52,12 +52,87 @@ router.post("/search-admin", async (req, res) => {
             + ` AND (${hasValue(sample?.status) ? `status = ${sample?.status}` : "1=1"})`
             + ` ${orders?.property ? `ORDER BY ${orders?.property} ${orders?.direction}` : ""}`
         let [products] = await pool.execute(sql)
+        console.log('sql', sql);
+
         return res.status(200).json({ success: true, data: products })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: "Internal server error !" })
     }
 })
+
+// {
+//     "id": 48,
+//     "name": "Sản phẩm 1",
+//     "description": "Mô tả 1",
+//     "information": "Thông tin 1",
+//     "priceRange": 10000000,
+//     "qualityGrade": "Tốt, còn bảo hành",
+//     "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731348882/qzhclg74y8si4smzrle1.png",
+//     "star": 5,
+//     "id_producer": 1,
+//     "id_category": 1,
+//     "createAt": "2024-11-11T18:17:35.000Z",
+//     "updateAt": "2024-11-11T18:17:35.000Z",
+//     "status": 1,
+//     "productDetail": [
+//         {
+//             "id": 187,
+//             "color": "Black",
+//             "size": "64GB",
+//             "quantity": 12,
+//             "price": 1000000,
+//             "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731348927/frwoywcco9tzzz8cohgb.png"
+//         },
+//         {
+//             "id": 188,
+//             "color": "Black",
+//             "size": "128GB",
+//             "quantity": 15,
+//             "price": 1200000,
+//             "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731348927/frwoywcco9tzzz8cohgb.png"
+//         },
+//         {
+//             "id": 189,
+//             "color": "Black",
+//             "size": "256GB",
+//             "quantity": 32,
+//             "price": 1500000,
+//             "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731348927/frwoywcco9tzzz8cohgb.png"
+//         },
+//         {
+//             "id": 190,
+//             "color": "White",
+//             "size": "512GB",
+//             "quantity": 12,
+//             "price": 200000,
+//             "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731349010/y1kzojwlx9whq8w3fopl.png"
+//         },
+//         {
+//             "id": 191,
+//             "color": "White",
+//             "size": "1TB",
+//             "quantity": "205",
+//             "price": 240000,
+//             "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731349010/y1kzojwlx9whq8w3fopl.png"
+//         },
+//         {
+//             "id": 192,
+//             "color": "White",
+//             "size": "2TB",
+//             "quantity": "95",
+//             "price": 300000,
+//             "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731349010/y1kzojwlx9whq8w3fopl.png"
+//         },
+//         {
+//             "color": "Red",
+//             "size": "2TB",
+//             "quantity": "95",
+//             "price": 300000,
+//             "img": "http://res.cloudinary.com/drkmrlmla/image/upload/v1731349010/y1kzojwlx9whq8w3fopl.png"
+//         }
+//     ]
+// }
 
 router.get("/page", async (req, res) => {
     try {

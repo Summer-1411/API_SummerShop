@@ -22,7 +22,7 @@ router.get('/find/:id', async (req, res) => {
 //GET ALL COLOR - 1 PRODUCT by id_pro
 router.get('/color/:id', async (req, res) => {
     try {
-        const [colors] = await pool.execute(`SELECT DISTINCT color FROM filter WHERE id_pro=? AND deleted=?`, [req.params.id, 0])
+        const [colors] = await pool.execute(`SELECT DISTINCT color FROM filter WHERE id_pro=? AND status=?`, [req.params.id, 1])
         return res.status(200).json({ success: true, colors })
     } catch (error) {
         console.log(error);
@@ -34,7 +34,7 @@ router.get('/color/:id', async (req, res) => {
 //GET ALL SIZE - 1 PRODUCT by id_pro
 router.get('/size/:id', async (req, res) => {
     try {
-        const [sizes] = await pool.execute(`SELECT DISTINCT size FROM filter WHERE id_pro=? AND deleted=?`, [req.params.id, 0])
+        const [sizes] = await pool.execute(`SELECT DISTINCT size FROM filter WHERE id_pro=? AND status=?`, [req.params.id, 1])
         return res.status(200).json({ success: true, sizes })
     } catch (error) {
         console.log(error);
@@ -47,7 +47,7 @@ router.get('/searchsize', async (req, res) => {
     const qcolor = req.query.color
     const qid_pro = req.query.idpro
     try {
-        const [sizes] = await pool.execute(`SELECT DISTINCT id, size FROM filter WHERE id_pro=? AND color=? AND deleted=?`, [qid_pro, qcolor, 0])
+        const [sizes] = await pool.execute(`SELECT DISTINCT id, size FROM filter WHERE id_pro=? AND color=? AND status=?`, [qid_pro, qcolor, 1])
         return res.status(200).json({ success: true, sizes })
     } catch (error) {
         console.log(error);
@@ -60,7 +60,7 @@ router.get('/searchcolor', async (req, res) => {
     const qsize = req.query.size
     const qid_pro = req.query.idpro
     try {
-        const [colors] = await pool.execute(`SELECT DISTINCT id, color, img FROM filter WHERE id_pro=? AND size=? AND deleted=?`, [qid_pro, qsize, 0])
+        const [colors] = await pool.execute(`SELECT DISTINCT id, color, img FROM filter WHERE id_pro=? AND size=? AND status=?`, [qid_pro, qsize, 1])
         return res.status(200).json({ success: true, colors })
     } catch (error) {
         console.log(error);
@@ -73,7 +73,7 @@ router.get("/img", async (req, res) => {
     const qcolor = req.query.color
     const qid_pro = req.query.idpro
     try {
-        const [img] = await pool.execute(`SELECT img FROM filter WHERE id_pro=? AND deleted=? AND color=?`, [qid_pro, qcolor, 0])
+        const [img] = await pool.execute(`SELECT img FROM filter WHERE id_pro=? AND status=? AND color=?`, [qid_pro, 0, qcolor])
         return res.status(200).json({ image: img[0] })
     } catch (error) {
         console.log(error);
@@ -88,7 +88,7 @@ router.get('/details', async (req, res) => {
     const qcolor = req.query.color
     const qid_pro = req.query.idpro
     try {
-        const [detail] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND size=? AND color=? AND deleted=?`, [qid_pro, qsize, qcolor, 0])
+        const [detail] = await pool.execute(`SELECT * FROM filter WHERE id_pro=? AND size=? AND color=? AND status=?`, [qid_pro, qsize, qcolor, 1])
         return res.status(200).json({ success: true, detail: detail[0] })
     } catch (error) {
         console.log(error);
@@ -140,8 +140,8 @@ router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
 router.put("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
     console.log(req.params.id);
     try {
-        const [result] = await pool.execute('UPDATE filter SET deleted=? WHERE id=?',
-            [1, req.params.id]);
+        const [result] = await pool.execute('UPDATE filter SET status=? WHERE id=?',
+            [0, req.params.id]);
         return res.status(200).json({ success: true, message: "Xoá thông tin sản phẩm thành công" })
     } catch (error) {
         console.log("error lỗi", error);
