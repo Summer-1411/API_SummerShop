@@ -1,8 +1,8 @@
 const pdf = require('html-pdf');
 const { sendMail } = require('./emailService');
-const createFilePdf = (htmlContent, options ,res) => {
+const createFilePdf = (htmlContent, options, res) => {
     pdf.create(htmlContent, options).toBuffer((pdfErr, buffer) => {
-            
+
         if (pdfErr) {
             console.error(pdfErr);
             return res.status(500).send('Error generating PDF');
@@ -17,9 +17,9 @@ const createFilePdf = (htmlContent, options ,res) => {
 
 const sendMailInvoice = (htmlContent, options, invoice, res) => {
     pdf.create(htmlContent, options).toBuffer((pdfErr, buffer) => {
-            
+
         if (pdfErr) {
-            console.error('pdfErr : ',pdfErr);
+            console.error('pdfErr : ', pdfErr);
             return res.status(500).json({ success: false, message: "Internal server error" })
         }
         const data = {
@@ -33,7 +33,23 @@ const sendMailInvoice = (htmlContent, options, invoice, res) => {
     });
 }
 
+const sendMailOrder = (options, { email, subject, htmlContent }) => {
+    pdf.create(htmlContent, options).toBuffer((pdfErr, buffer) => {
+
+        if (pdfErr) {
+            console.error('pdfErr : ', pdfErr);
+        }
+        const data = {
+            email: email,
+            subject: subject,
+            html: htmlContent
+        }
+        sendMail(data)
+    });
+}
+
 module.exports = {
     createFilePdf,
-    sendMailInvoice
+    sendMailInvoice,
+    sendMailOrder
 }
