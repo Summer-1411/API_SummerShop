@@ -4,9 +4,10 @@ const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = requir
 
 const axios = require('axios');
 const pool = require('../common/connectDB');
-const { getBodyHTMLSoldOut, sendMail } = require('../service/emailService');
-
-
+const { getBodyHTMLSoldOut, sendMail, getBodyHTMLEmailSuccessOrder, getBodyHTMLEmailCancelOrder } = require('../service/emailService');
+const LayoutDetail = require('../views/LayoutDetail');
+const { sendMailOrder } = require('../service/invoiceService');
+const SinglePage = require('../views/SinglePage');
 //-1: Đơn hàng khách huỷ
 //0: Đang chờ xử ý
 //1: Đã duyệt đơn
@@ -227,7 +228,8 @@ router.get("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
         //Đã huỷ bởi khách hàng
         const cancel = req.query.cancel;
 
-        const query = `SELECT orders.id, orders.fullname, orders.phone, orders.note, orders.reason, orders.orderDate, orders.status, orders.payment_method, orders.shipping_address, orders.voucherValue,orders.total_amount, user.email, user.username
+
+        const query = `SELECT orders.id, orders.id_user,orders.fullname, orders.phone, orders.note, orders.reason, orders.orderDate, orders.status, orders.payment_method, orders.shipping_address, orders.voucherValue,orders.total_amount, user.email, user.username
                         FROM orders INNER JOIN user ON user.id = orders.id_user
                         WHERE orders.status = ? ORDER BY orders.orderDate DESC`;
         if (confirm) {
@@ -270,9 +272,6 @@ router.put("/cancel_by_user/:id", verifyTokenAndAuthorization, async (req, res) 
 //Admin xử lý đơn
 router.put("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
     try {
-        const id = req.body.id;
-        //Xác nhận đơn
-        //const confirm = req.query.confirm;
         //Hoàn thành đơn
         const success = req.query.success;
         //Huỷ đơn
@@ -280,36 +279,40 @@ router.put("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
         //Hoàn tác huỷ
         const undo = req.query.undo;
 
+        const detailOrder = req.body
+        const { id, userId, email, fullName } = detailOrder
+        const options = { format: 'Letter' };
         const query = `UPDATE orders SET status = ? WHERE id = ?`;
-        console.log({ success, refuse, undo });
         if (success) {
-            console.log("success");
-            const [handleOrder] = await pool.query(query, [2, id]);
+            await pool.query(query, [2, id]);
+            const htmlContent = LayoutDetail(getBodyHTMLEmailSuccessOrder(fullName), SinglePage(detailOrder))
+            const subject = "Đơn hàng của bạn đã được giao thành công"
+            sendMailOrder(options, { email, subject, htmlContent })
             return res.status(200).json({ success: true, message: "Đơn đã hoàn thành" })
         } else if (refuse) {
             let reason = req.body.reason
-            console.log("refuse", reason, id);
             const [detail] = await pool.query(`SELECT * FROM order_detail WHERE id_order = ?`, [id])
-            console.log(detail);
+
             //Admin cancel thì số lượng sản phẩm trở về ban đầu như khi khách chưa đặt
             await updateFiltersQuantitiesByAdminCancel(detail)
             const qr = `UPDATE orders SET status = ?, reason = ? WHERE id = ?`;
-            const [handleOrder] = await pool.query(qr, [-2, reason, id]);
+            await pool.query(qr, [-2, reason, id]);
+            const htmlContent = LayoutDetail(getBodyHTMLEmailCancelOrder({ fullName, reason }), SinglePage(detailOrder))
+            const subject = "Đơn hàng của bạn đã bị hủy"
+            sendMailOrder(options, { email, subject, htmlContent })
             return res.status(200).json({ success: true, message: "Đã huỷ đơn thành công" })
         } else if (undo) {
-            console.log("undo");
             let reason = req.body.reason
             const qr = `UPDATE orders SET status = ?, reason = ? WHERE id = ?`;
             //Admin hoàn tác lại thao tác huỷ đơn hàng thì số lươnng sản phẩm sẽ bị giảm đi như khi người dùng đặt
             const [detail] = await pool.query(`SELECT * FROM order_detail WHERE id_order = ?`, [id])
             await updateFiltersQuantities(detail)
-            const [handleOrder] = await pool.query(qr, [0, reason, id]);
+            await pool.query(qr, [0, reason, id]);
             return res.status(200).json({ success: true, message: "Đã hoàn tác hành động huỷ đơn" })
         }
 
         //Mặc định là xác nhận đơn
-        console.log("confirm");
-        const [handleOrder] = await pool.query(query, [1, id]);
+        await pool.query(query, [1, id]);
         return res.status(200).json({ success: true, message: "Xác nhận đơn hàng thành công" })
     } catch (error) {
         console.log(error)

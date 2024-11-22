@@ -43,26 +43,6 @@ app.use(logRequest);
 //     credential: admin.credential.cert(serviceAccount),
 // });
 
-// Hàm gửi thông báo đến tất cả người dùng
-// function sendNotificationToAllUsers(productName) {
-//     const message = {
-//         notification: {
-//             title: "Sản phẩm mới!",
-//             body: `Chúng tôi vừa thêm sản phẩm mới: ${productName}`,
-//         },
-//         tokens: deviceTokens,
-//     };
-
-//     // Gửi thông báo qua Firebase Cloud Messaging
-//     admin.messaging().sendEachForMulticast(message)
-//         .then((response) => {
-//             console.log('Successfully sent message:', response);
-//         })
-//         .catch((error) => {
-//             console.error('Error sending message:', error);
-//         });
-// }
-
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.get('/redirect', (req, res) => {
