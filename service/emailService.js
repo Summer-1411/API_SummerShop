@@ -77,13 +77,25 @@ let getBodyHTMLSoldOut = (dataSend) => {
 let getBodyHTMLEmailCancelOrder = (dataSend) => {
     let result =
         `
-        <h3>Xin chào ${dataSend.username}!</h3>
+        <h3>Xin chào ${dataSend.fullName}!</h3>
         <p>Bạn nhận được email vì đơn hàng của bạn đã không thể hoàn thành vì lí do ${dataSend.reason}</p>
         <p>Chúng tôi rất xin lỗi về sự cố lần này</p>
         <div>Xin chân thành cảm ơn!</div>
+        <div> Sau đây là thông tin hóa đơn của bạn</div>
     `
     return result
 }
+
+let getBodyHTMLEmailSuccessOrder = (fullName) => {
+    let result =
+        `
+        <h3>Xin chào ${fullName}!</h3>
+        <p>Bạn nhận được email vì đơn hàng của bạn đã được giao thành công. Cảm ơn bạn đã luôn tin tưởng cửa hàng </p>
+        <div> Sau đây là thông tin hóa đơn của bạn</div>
+    `
+    return result
+}
+
 
 
 
@@ -93,5 +105,6 @@ module.exports = {
     getBodyHTMLEmailCancelOrder,
     getBodyHTMLForgotPassword,
     getBodyHTMLChangePassword,
-    getBodyHTMLSoldOut
+    getBodyHTMLSoldOut,
+    getBodyHTMLEmailSuccessOrder
 }

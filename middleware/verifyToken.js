@@ -1,5 +1,35 @@
 const jwt = require('jsonwebtoken')
 
+const verifyOptionalToken = (req, res, next) => {
+    const authHeader = req.header('Authorization');
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        console.log(
+            'token 1', token
+        );
+
+        // Không có token, tiếp tục mà không xác thực
+        req.user = null;
+        return next();
+    }
+
+    try {
+        console.log(
+            'token 2', token
+        );
+        // Xác thực token
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        req.user = decoded; // Gắn thông tin user vào request
+        console.log('decoded', decoded);
+
+        next();
+    } catch (error) {
+        console.log('Token không hợp lệ:', error.message);
+        req.user = null; // Không gắn thông tin user nếu token không hợp lệ
+        next(); // Tiếp tục mà không chặn yêu cầu
+    }
+};
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.header('Authorization')
@@ -53,6 +83,7 @@ const verifyTokenAndAdmin = (req, res, next) => {
 module.exports = {
     verifyToken,
     verifyTokenAndAuthorization,
-    verifyTokenAndAdmin
+    verifyTokenAndAdmin,
+    verifyOptionalToken
 }
 
