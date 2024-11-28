@@ -15,13 +15,6 @@ class FireBaseTokenRepository {
         });
     }
 
-    static async findByType(type) {
-        return await prisma.firebase_token.findMany({
-            where: {
-                type: type,
-            },
-        });
-    }
     static async findByToken(token) {
         return await prisma.firebase_token.findMany({
             where: {

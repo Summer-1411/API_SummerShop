@@ -7,12 +7,10 @@ class fireBaseTokenService {
         try {
             const userId = req?.user?.id ?? null;
             const {
-                type,
                 token,
             } = req.body
             const dataSave = {
                 token,
-                type,
                 userId,
                 createdAt: new Date(),
             }

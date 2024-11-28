@@ -114,23 +114,25 @@ model producer {
 }
 
 model product {
-  id           Int        @id @default(autoincrement())
-  name         String?    @db.VarChar(255)
-  description  String?    @db.Text
-  information  String?    @db.Text
-  priceRange   Int
-  qualityGrade String?    @db.VarChar(255)
-  img          String?    @db.VarChar(255)
-  star         Float?     @default(5) @db.Float
-  id_producer  Int?
-  id_category  Int?
-  createAt     DateTime?  @default(now()) @db.DateTime(0)
-  updateAt     DateTime?  @default(now()) @db.DateTime(0)
-  status       Int        @default(1)
-  feedback     feedback[]
-  filter       filter[]
-  producer     producer?  @relation(fields: [id_producer], references: [id], onDelete: Cascade, map: "pro_producer")
-  category     category?  @relation(fields: [id_category], references: [id], onDelete: Cascade, map: "product_ibfk_2")
+  id             Int        @id @default(autoincrement())
+  name           String?    @db.VarChar(255)
+  description    String?    @db.Text
+  information    String?    @db.Text
+  priceRange     Int
+  qualityGrade   String?    @db.VarChar(255)
+  img            String?    @db.VarChar(255)
+  star           Float?     @default(5) @db.Float
+  id_producer    Int?
+  id_category    Int?
+  createAt       DateTime?  @default(now()) @db.DateTime(0)
+  updateAt       DateTime?  @default(now()) @db.DateTime(0)
+  status         Int        @default(1)
+  warrantyPeriod Int?
+  warrantyDetail String?    @db.Text
+  feedback       feedback[]
+  filter         filter[]
+  producer       producer?  @relation(fields: [id_producer], references: [id], onDelete: Cascade, map: "pro_producer")
+  category       category?  @relation(fields: [id_category], references: [id], onDelete: Cascade, map: "product_ibfk_2")
 
   @@index([id_producer], map: "pro_producer")
   @@index([id_category], map: "product_ibfk_2")
@@ -179,8 +181,27 @@ model api_log {
 
 model firebase_token {
   id        Int      @id @default(autoincrement())
-  type      String   @db.VarChar(30)
   token     String   @db.VarChar(255)
   userId    Int?
   createdAt DateTime @default(now()) @db.DateTime(0)
+}
+
+model warranty {
+  id       Int      @id @default(autoincrement())
+  filterId Int
+  userId   Int
+  orderId  Int
+  fromDate DateTime @db.Date
+  toDate   DateTime @db.Date
+  status   String   @db.VarChar(20)
+  createAt DateTime @default(now()) @db.DateTime(0)
+}
+
+model warranty_request {
+  id          Int       @id @default(autoincrement())
+  description String?   @db.Text
+  img         String?   @db.VarChar(255)
+  createAt    DateTime? @default(now()) @db.DateTime(0)
+  status      String?   @db.VarChar(30)
+  response    String?   @db.Text
 }

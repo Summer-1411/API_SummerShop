@@ -20,7 +20,29 @@ const validExpiresTime = (value, time = 15) => {
 function hasValue(variable) {
     return variable !== undefined && variable !== null && variable !== '';
 }
+
+const numberWithCommas = (number) => {
+    return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    // Lấy ngày, tháng, năm
+    const day = String(date.getDate()).padStart(2, '0'); // Thêm số 0 nếu cần
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+    const year = date.getFullYear();
+
+    // Lấy giờ, phút
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    // Ghép thành chuỗi định dạng dd/mm/yyyy HH:mm
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
 module.exports = {
     validExpiresTime,
-    hasValue
+    hasValue,
+    numberWithCommas,
+    formatDate
 }

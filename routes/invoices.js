@@ -5,6 +5,7 @@ const { invoices } = require('../data/dataTest');
 const Layout = require('../views/Layout');
 const SinglePage = require('../views/SinglePage');
 const ListPage = require('../views/ListPage');
+const SinglePageNew = require('../views/SinglePageNew');
 
 router.get('/', function (req, res) {
     res.render('invoice-list', {
@@ -50,13 +51,25 @@ router.post('/export_id', async function (req, res) {
 
     const invoice = req.body
 
-    console.log('invoice',invoice);
+    console.log('invoice', invoice);
     const htmlContent = Layout(SinglePage(invoice))
 
-    console.log('htmlContent',htmlContent);
+    console.log('htmlContent', htmlContent);
     const options = { format: 'Letter' };
     createFilePdf(htmlContent, options, res)
+});
 
+
+router.post('/export_single', async function (req, res) {
+
+    const invoice = req.body
+
+    console.log('invoice', invoice);
+    const htmlContent = Layout(SinglePageNew(invoice))
+
+    console.log('htmlContent', htmlContent);
+    const options = { format: 'Letter' };
+    createFilePdf(htmlContent, options, res)
 });
 
 

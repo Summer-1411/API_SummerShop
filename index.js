@@ -27,6 +27,7 @@ const productController = require('./src/controller/ProductController')
 const filterController = require('./src/controller/FilterController')
 const userController = require('./src/controller/UserController');
 const apiLogController = require('./src/controller/ApiLogController');
+const orderController = require('./src/controller/OrderController');
 const firebaseTokenController = require('./src/controller/FirebaseTokenController');
 const logRequest = require('./middleware/logging');
 const startProcess = require('./src/process/logApi');
@@ -95,6 +96,7 @@ app.use('/api/v1/filter', filterController)
 app.use('/api/v1/user', userController)
 app.use('/api/v1/api-log', apiLogController)
 app.use('/api/v1/firebase-token', firebaseTokenController)
+app.use('/api/v1/order', orderController)
 
 
 startProcess()
