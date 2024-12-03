@@ -156,13 +156,17 @@ model user {
 }
 
 model voucher {
-  id          Int      @id @default(autoincrement())
-  code        String   @db.VarChar(20)
-  value       Int
-  quantity    Int
-  maxMoney    Float?
-  expiredTime DateTime @db.DateTime(0)
-  description String?  @db.Text
+  id            Int       @id @default(autoincrement())
+  code          String    @db.VarChar(20)
+  value         Int
+  quantity      Int
+  initQuantity  Int
+  minOrderValue Float?
+  maxMoney      Float?
+  expiredTime   DateTime  @db.DateTime(0)
+  description   String?   @db.Text
+  createAt      DateTime  @default(now()) @db.DateTime(0)
+  updateAt      DateTime? @db.DateTime(0)
 }
 
 model api_log {
