@@ -56,7 +56,7 @@ router.post('/check-change-password', verifyToken, async (req, res) => {
 			.json({ success: false, message: 'Thiếu tham số  !' })
 	}
 	try {
-		const [userExist] = await pool.query(`SELECT * FROM user WHERE id = ? AND deleted = ?`, [idUser, 0]);
+		const [userExist] = await pool.query(`SELECT * FROM user WHERE id = ? AND status = ?`, [idUser, 1]);
 		if (userExist.length === 0) {
 			return res
 				.status(400)
@@ -88,7 +88,7 @@ router.post('/save-change-password', verifyToken, async (req, res) => {
 			.json({ success: false, message: 'Missing parameters !' })
 	}
 	try {
-		const [userExist] = await pool.query(`SELECT * FROM user WHERE id = ? AND deleted = ?`, [idUser, 0]);
+		const [userExist] = await pool.query(`SELECT * FROM user WHERE id = ? AND status = ?`, [idUser, 1]);
 		if (userExist.length === 0) {
 			return res
 				.status(400)
@@ -238,17 +238,11 @@ router.post('/login', async (req, res) => {
 				.status(400)
 				.json({ success: false, message: 'Mật khẩu không chính xác' })
 
-		// const [userDeleted] = await pool.query(`SELECT * FROM user WHERE email = ? AND deleted = ?`, [email,'1']);
-		// if (userDeleted.length > 0){
-		// 	return res
-		// 		.status(400)
-		// 		.json({ success: false, message: 'Tài khoản đã bị xoá !'})
-		// }
 
 		// All good
 		// Return token
 		delete userExist[0].password
-		delete userExist[0].deleted
+		delete userExist[0].status
 		const accessToken = jwt.sign({
 			id: userExist[0].id,
 			isAdmin: userExist[0].isAdmin

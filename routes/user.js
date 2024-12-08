@@ -121,12 +121,6 @@ router.put("/update/:id", verifyTokenAndAuthorization, async (req, res) => {
 //DELETE
 
 router.put("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
-    //const { deleted } = req.body
-    // if (!deleted) {
-    //     return res
-    //         .status(400)
-    //         .json({ success: false, message: 'Missing parameters !' })
-    // }
     try {
         await pool.execute('UPDATE user SET status = ? WHERE id = ?',
             [0, req.params.id])
@@ -139,12 +133,6 @@ router.put("/delete/:id", verifyTokenAndAdmin, async (req, res) => {
 
 //Khôi phục user 
 router.put("/cancel-delete/:id", verifyTokenAndAdmin, async (req, res) => {
-    // const { deleted } = req.body
-    // if (!deleted) {
-    //     return res
-    //         .status(400)
-    //         .json({ success: false, message: 'Missing parameters !' })
-    // }
     try {
         await pool.execute('UPDATE user SET status = ? WHERE id = ?',
             [1, req.params.id])

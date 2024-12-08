@@ -1,3 +1,4 @@
+
 const validExpiresTime = (value, time = 15) => {
     console.log('time', time);
     if (!value) {
@@ -44,5 +45,5 @@ module.exports = {
     validExpiresTime,
     hasValue,
     numberWithCommas,
-    formatDate
+    formatDate,
 }
