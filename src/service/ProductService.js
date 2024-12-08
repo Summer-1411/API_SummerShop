@@ -33,7 +33,7 @@ class ProductService {
             const tokensArray = await fireBaseTokenRepository.getAllToken();
 
             const tokens = tokensArray.map(item => item.token);
-            sendNotifyToUsers("Sản phẩm mới", `Cửa hàng Summer Shop vừa thêm mới 1 sản phẩm : ${name}`, tokens)
+            // sendNotifyToUsers("Sản phẩm mới", `Cửa hàng Summer Shop vừa thêm mới 1 sản phẩm : ${name}`, tokens)
 
             return res.status(200).json({ success: true, message: "Thêm mới sản phẩm thành công", product });
         } catch (error) {

@@ -1,4 +1,5 @@
 // src/repository/VoucherRepository.js
+const { hasValue } = require("../../utils");
 const prisma = require("../prisma");
 
 class VoucherRepository {
@@ -11,6 +12,7 @@ class VoucherRepository {
                 expiredTime: {
                     gte: currentTime // Lọc các voucher có expiredTime lớn hơn hoặc bằng thời gian hiện tại
                 },
+                status: 1
             },
         });
     }
@@ -18,7 +20,7 @@ class VoucherRepository {
     // Hàm filter/search voucher
     static async filter(data) {
         const { sample = {}, orders = {} } = data
-        const { code, value, quantity, minOrderValue, maxMoney, expiredTime, description } = sample;
+        const { code, value, quantity, minOrderValue, maxMoney, expiredTime, description, status } = sample;
         const { property, direction } = orders;
         return await prisma.voucher.findMany({
             where: {
@@ -36,6 +38,7 @@ class VoucherRepository {
                 expiredTime: expiredTime ? { gte: new Date(expiredTime) } : undefined,
                 // Điều kiện tìm kiếm mô tả voucher
                 description: description ? { contains: description } : undefined,
+                status: hasValue(status) ? parseInt(status) : undefined,
             },
             orderBy: {
                 // Sắp xếp theo thuộc tính 'property' (mặc định là 'createAt') và hướng 'asc' hoặc 'desc'
@@ -48,7 +51,8 @@ class VoucherRepository {
         return await prisma.voucher.findFirst({
             where: {
                 code: code,
-            },
+                status: 1
+            }
         });
     }
 
@@ -63,13 +67,14 @@ class VoucherRepository {
                 maxMoney,
                 expiredTime,
                 description,
+                status: 1,
                 createAt: new Date()
             }
         });
     }
 
     // Cập nhật voucher
-    static async update(id, { code, value, quantity, minOrderValue, maxMoney, expiredTime, description }) {
+    static async update(id, { code, value, quantity, minOrderValue, maxMoney, expiredTime, description, status }) {
         return await prisma.voucher.update({
             where: { id },
             data: {
@@ -80,8 +85,16 @@ class VoucherRepository {
                 maxMoney,
                 expiredTime,
                 description,
+                status,
                 updateAt: new Date()
             }
+        });
+    }
+
+    static async softDelete(id) {
+        return await prisma.voucher.update({
+            where: { id: parseInt(id) },
+            data: { status: 0 },
         });
     }
 }

@@ -10,7 +10,7 @@ class apiLogService {
 
         const tokens = tokensArray.map(item => item.token);
 
-        sendNotifyToUsers("Test api", "Check message", tokens)
+        // sendNotifyToUsers("Test api", "Check message", tokens)
         try {
             const data = await apiLogRepository.search(req.body);
 
