@@ -22,6 +22,19 @@ class VoucherService {
             return res.status(500).json({ success: false, message: vi.serverError });
         }
     }
+    static async delete(req, res) {
+        try {
+            // Lấy danh sách voucher chưa hết hạn
+            const { id } = req.body
+            // console.log('id', id);
+
+            const data = await voucherRepository.softDelete(id);
+            return res.status(200).json({ success: true, message: "Xóa mã giảm giá thành công" });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ success: false, message: vi.serverError });
+        }
+    }
 
     // Filter by admin
     static async filter(req, res) {
@@ -97,6 +110,7 @@ class VoucherService {
                 minOrderValue,
                 expiredTime,
                 description,
+                status,
             } = req.body;
             const existingVoucher = await voucherRepository.findUniqueCode(code);
             const checkUpdate = VoucherService.checkExistUpdate(existingVoucher, id)
@@ -112,6 +126,7 @@ class VoucherService {
                     maxMoney: hasValue(maxMoney) ? Number(maxMoney) : undefined,
                     expiredTime: expiredDate,
                     description: description ? description : undefined,
+                    status
                 }
                 const dataResponse = await voucherRepository.update(id, data);
                 return res.status(200).json({ success: true, data: dataResponse });
@@ -132,6 +147,8 @@ class VoucherService {
         }
         return true
     }
+
+
 }
 
 module.exports = VoucherService;

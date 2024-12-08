@@ -75,10 +75,23 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
 	}
 })
 
-router.delete("/clear", verifyToken, async (req, res) => {
+router.post("/remove-product-cart", verifyToken, async (req, res) => {
 	try {
-		const [cart] = await pool.query(`DELETE FROM cart WHERE id_user = ?`, [req.user.id]);
-		res.status(200).json({ success: true, message: "Giỏ hàng trống" })
+		const { products } = req.body;
+		// Trích xuất mảng các id từ các đối tượng sản phẩm
+		const ids = products.map(product => product.id);
+
+		// Tạo chuỗi câu hỏi cho `IN` từ mảng ids
+		// const idsDelete = ids.map(() => '?').join(', '); // Tạo các dấu hỏi (?)
+
+		// const [cart] = await pool.query(`DELETE FROM cart WHERE id_user = ?`, [req.user.id]);
+
+		// Truy vấn SQL
+		const query = `DELETE FROM cart WHERE id IN (${ids}) AND id_user = ?`;
+
+
+		const [cart] = await pool.query(query, [req.user.id]);
+		res.status(200).json({ success: true, message: "Xóa sản phẩm trong giỏ hàng thành công" })
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ success: false, message: 'Internal server error' })

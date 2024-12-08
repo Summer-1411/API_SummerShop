@@ -9,5 +9,6 @@ router.get("/search", voucherService.searchNotExpired);
 router.post("/filter", verifyTokenAndAdmin, voucherService.filter);
 router.post("/create", verifyTokenAndAdmin, voucherService.create);
 router.post("/update", verifyTokenAndAdmin, voucherService.update);
+router.post("/delete", verifyTokenAndAdmin, voucherService.delete);
 
 module.exports = router;

@@ -10,6 +10,7 @@ const { sendMailOrder } = require('../service/invoiceService');
 const SinglePage = require('../views/SinglePage');
 const SinglePageNew = require('../views/SinglePageNew');
 const Layout = require('../views/Layout');
+const { validateVoucher, validExpiresTime } = require('../utils');
 //-1: Đơn hàng khách huỷ
 //0: Đang chờ xử ý
 //1: Đã duyệt đơn
@@ -88,16 +89,38 @@ router.post('/', verifyToken, async (req, res) => {
             note,
             paymentMethod, // 1 khi nhận hàng - 2 online
             voucherValue,
+            voucherCode
         } = req.body;
 
+        if (voucherCode) {
+            console.log('running', voucherCode);
+
+            let sql = `SELECT * FROM voucher WHERE CODE = "${voucherCode}"`
+            let [data] = await pool.execute(sql)
+            const voucher = data[0];
+            if (data.length === 0) {
+                return res.status(400).json({ success: false, message: "Mã giảm giá không hợp lệ !" })
+            }
+            const checkTimeExpired = validExpiresTime(voucher.expiredTime, 0);
+            if (!checkTimeExpired) {
+                return res.status(400).json({ success: false, message: "Mã giảm giá đã hết hạn !" })
+            }
+            if (voucher.quantity === 0) {
+                return res.status(400).json({ success: false, message: "Mã giảm giá đã được sử dụng hết, vui lòng nhập mã khác !" })
+            }
+            let sqlUpdate = `UPDATE voucher SET quantity = quantity - ${1}  WHERE id = ${voucher.id} `
+            await pool.execute(sqlUpdate)
+        }
+        console.log('running');
+
         const statusOrder = paymentMethod === '1' ? 0 : 10 // status = 0, chờ xác nhận đơn thanh toán khi nhận hàng, status = 10 : chờ xử lý payment
-        const query = `INSERT INTO orders (id_user, fullname, phone, shipping_address, shipping_method, total_amount, note, payment_method, voucherValue, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        const query = `INSERT INTO orders (id_user, fullname, phone, shipping_address, shipping_method, total_amount, note, payment_method, voucherValue, voucherCode, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
         const [result] = await pool.query(query
-            , [req.user.id, fullname, phone, address, methodShip, total, note, paymentMethod, voucherValue, statusOrder]);
+            , [req.user.id, fullname, phone, address, methodShip, total, note, paymentMethod, voucherValue, voucherCode, statusOrder]);
 
         const orderId = result.insertId
         const products = req.body.products
-        const values1 = products.map(item => [result.insertId, item.id_filter, item.quantity, item.price]);
+        const values1 = products.map(item => [orderId, item.id_filter, item.quantity, item.price]);
         await updateFiltersQuantities(products)
         const sql = 'INSERT INTO order_detail (id_order, id_filter, quantity, price) VALUES ?';
         const [result1] = await pool.query(sql, [values1]);
@@ -129,6 +152,8 @@ router.post('/', verifyToken, async (req, res) => {
 
         }
 
+
+
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Có lỗi xảy ra trong quá trình xử lý !' })
@@ -140,7 +165,7 @@ router.get("/cancel-payment/:id", async (req, res) => {
         const id = req.params.id
         // const [order] = await pool.query(`DELETE FROM orders WHERE id = ?`, [id]);
         // res.json({ success: true, message: "Giỏ hàng trống"})
-        return res.redirect('http://localhost:3001/')
+        return res.redirect('http://localhost:5173/')
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error' })
