@@ -286,8 +286,11 @@ router.get("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
 router.put("/cancel_by_user/:id", verifyTokenAndAuthorization, async (req, res) => {
     try {
         console.log("red.body.id_order: ", req.body.id);
-        const query = `UPDATE orders SET status = ? WHERE id = ?`;
-        const [cancelOrder] = await pool.query(query, [-1, req.body.id]);
+        const { id, reason } = req.body
+        console.log(id, reason);
+
+        const query = `UPDATE orders SET status = ?, reason = ? WHERE id = ?`;
+        const [cancelOrder] = await pool.query(query, [-1, reason, id]);
         console.log(cancelOrder);
         return res.status(200).json({ success: true, message: "Huỷ đơn hàng thành công" })
     } catch (error) {
