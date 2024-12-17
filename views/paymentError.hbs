@@ -6,11 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Result</title>
     <style>
-        /* styles.css */
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,42 +28,68 @@
             justify-content: center;
             align-items: center;
             width: 100%;
+            padding: 15px;
         }
 
         .result-card {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px;
+            width: 100%;
+            max-width: 400px;
             text-align: center;
-            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
         }
 
         .result-card h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 26px;
             color: #f44336;
+            font-weight: 700;
+            margin-bottom: 15px;
         }
 
         .result-card p {
-            font-size: 16px;
+            font-size: 18px;
             color: #333;
+            margin-bottom: 20px;
         }
 
         .result-card a {
             background-color: #f44336;
             text-decoration: none;
             color: white;
-            padding: 10px 20px;
-            border: none;
+            padding: 12px 25px;
             border-radius: 5px;
-            cursor: pointer;
             font-size: 16px;
+            text-transform: uppercase;
             margin-top: 20px;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .result-card button:hover {
-            background-color: #f44336;
+        .result-card a:hover {
+            background-color: #d32f2f;
+            transform: scale(1.05);
+        }
+
+        .result-card .zalo-link {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .result-card .zalo-link:hover {
+            color: #f44336;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -68,10 +99,11 @@
         <div class="result-card">
             <h1 id="result-title">Thanh toán thất bại</h1>
             <p id="result-message">Quá trình thanh toán của bạn đã bị hủy !</p>
+            <p>Mọi thắc mắc khi mua hàng, thanh toán, yêu cầu khi đổi hàng, hoàn hàng vui lòng liên hệ qua Zalo <a
+                    href="https://zalo.me/0373984007" class="zalo-link" target="_blank">0373984007</a>.</p>
             <a href="http://localhost:5173/">Trang chủ</a>
         </div>
     </div>
-    </script>
 </body>
 
 </html>
