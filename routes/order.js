@@ -286,8 +286,11 @@ router.get("/byAdmin", verifyTokenAndAdmin, async (req, res) => {
 router.put("/cancel_by_user/:id", verifyTokenAndAuthorization, async (req, res) => {
     try {
         console.log("red.body.id_order: ", req.body.id);
-        const query = `UPDATE orders SET status = ? WHERE id = ?`;
-        const [cancelOrder] = await pool.query(query, [-1, req.body.id]);
+        const { id, reason } = req.body
+        console.log(id, reason);
+
+        const query = `UPDATE orders SET status = ?, reason = ? WHERE id = ?`;
+        const [cancelOrder] = await pool.query(query, [-1, reason, id]);
         console.log(cancelOrder);
         return res.status(200).json({ success: true, message: "Huỷ đơn hàng thành công" })
     } catch (error) {
@@ -307,13 +310,13 @@ router.put("/manager-order", verifyTokenAndAdmin, async (req, res) => {
         //Hoàn tác huỷ
         const undo = req.query.undo;
         const detailOrder = req.body
-        const { id, id_user, fullName, user } = detailOrder
+        const { id, id_user, fullname, user } = detailOrder
         const { email, username } = user
         const options = { format: 'Letter' };
         const query = `UPDATE orders SET status = ? WHERE id = ?`;
         if (success) {
             await pool.query(query, [2, id]);
-            const htmlContent = LayoutDetail(getBodyHTMLEmailSuccessOrder(fullName), SinglePageNew(detailOrder))
+            const htmlContent = LayoutDetail(getBodyHTMLEmailSuccessOrder(fullname), SinglePageNew(detailOrder))
             const subject = "Đơn hàng của bạn đã được giao thành công"
             sendMailOrder(options, { email, subject, htmlContent })
             return res.status(200).json({ success: true, message: "Đơn đã hoàn thành" })
@@ -325,7 +328,7 @@ router.put("/manager-order", verifyTokenAndAdmin, async (req, res) => {
             await updateFiltersQuantitiesByAdminCancel(detail)
             const qr = `UPDATE orders SET status = ?, reason = ? WHERE id = ?`;
             await pool.query(qr, [-2, reason, id]);
-            const htmlContent = LayoutDetail(getBodyHTMLEmailCancelOrder({ fullName, reason }), SinglePageNew(detailOrder))
+            const htmlContent = LayoutDetail(getBodyHTMLEmailCancelOrder({ fullname, reason }), SinglePageNew(detailOrder))
             const subject = "Đơn hàng của bạn đã bị hủy"
             sendMailOrder(options, { email, subject, htmlContent })
             return res.status(200).json({ success: true, message: "Đã huỷ đơn thành công" })

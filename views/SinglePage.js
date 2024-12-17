@@ -94,11 +94,12 @@ const SinglePage = (invoice) => {
     </table >
     <div class="footer">
         <p>Chúc quý khách có những trải nhiệm tốt cùng <strong>Summer Shop</strong></p>
+         Mọi thắc mắc khi mua hàng, thanh toán, yêu cầu khi đổi hàng, hoàn hàng vui lòng liên hệ qua Zalo <a href="https://zalo.me/0373984007">0373984007</a>.
         <p>Xin chân thành cảm ơn !</p>
     </div>
     <div class="muted" style="text-align: left; padding: 8px 0;">Thông tin cửa hàng: 2Q8M+PM3, Đ. Phạm Hùng, Keangnam, Nam Từ Liêm, Hà Nội</div>
     <div style="text-align: center; background-color: #f5f5f5; padding: 4px;">
-        <p>Summer Shop ©2024 Created by HT 0373984007</p>
+        <p>Summer Shop ©2024 Created by Summer 0373984007</p>
     </div>`
 }
 
