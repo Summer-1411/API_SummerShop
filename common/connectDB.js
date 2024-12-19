@@ -17,13 +17,17 @@ const configDatabaseProduct = {
     host: "sql.freedb.tech",
     user: "freedb_freedb_summer_shop",
     password: "237Q5zUxp?*B7%q",
-    database: "freedb_summer_shop-shop"
+    database: "freedb_summer_shop"
 }
 const pool = mysql.createPool(configDatabaseProduct)
 
 pool.getConnection((err, conn) => {
+    console.log('err', err);
+    console.log('conn', conn);
+
+
     if (err) {
-        console.log(err);
+        console.log('err:', err);
     }
     console.log('success');
 })
