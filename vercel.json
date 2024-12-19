@@ -2,18 +2,10 @@
   "version": 2,
   "builds": [
     {
-      "src": "./index.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "src/prisma/schema.prisma"
-        ]
-      }
+      "src": "index.js",
+      "use": "@vercel/node"
     }
   ],
-  "hooks": {
-    "build": "npx prisma db pull --schema=src/prisma/schema.prisma && npx prisma generate --schema=src/prisma/schema.prisma"
-  },
   "routes": [
     {
       "src": "/(.*)",
