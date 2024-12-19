@@ -1,3 +1,9 @@
+# Ignore node_modules folder
+/node_modules/
 
-# dependencies
-/node_modules
+
+# Ignore Prisma Client generated files in node_modules
+/node_modules/.prisma/
+
+# You may want to unignore your Prisma schema if it should be versioned
+# !/prisma/schema.prisma
