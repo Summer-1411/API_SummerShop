@@ -221,12 +221,12 @@ router.post('/login', async (req, res) => {
 			.json({ success: false, message: 'Thiếu tên người dùng hoặc mật khẩu' })
 
 	try {
-		// Check for existing user
+
 		const [userExist] = await pool.query(`SELECT * FROM user WHERE email = ? AND status = ?`, [email, 1]);
 		if (userExist.length === 0) {
 			return res
 				.status(400)
-				.json({ success: false, message: 'Tài khoản không tồn tại !' })
+				.json({ success: false, message: 'Tài khoản đã bị xóa hoặc chưa đăng ký !' })
 		}
 
 
