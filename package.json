@@ -10,7 +10,8 @@
     "prisma:pull": "npx prisma db pull --schema=src/prisma/schema.prisma",
     "prisma:generate": "npx prisma generate --schema=src/prisma/schema.prisma",
     "postinstall": "prisma generate --schema=src/prisma/schema.prisma",
-    "build": "npm run prisma:generate && node index.js"
+    "build": "npm run prisma:generate && node index.js",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
