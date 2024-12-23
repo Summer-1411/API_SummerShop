@@ -19,7 +19,7 @@ const configDatabaseProduct = {
     password: "237Q5zUxp?*B7%q",
     database: "freedb_summer_shop"
 }
-const pool = mysql.createPool(configDatabaseProduct)
+const pool = mysql.createPool(configDatabaseLocal)
 
 pool.getConnection((err, conn) => {
     console.log('err', err);
