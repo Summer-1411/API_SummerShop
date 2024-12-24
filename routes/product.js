@@ -12,8 +12,7 @@ const { hasValue } = require('../utils')
 router.get("/check", async (req, res) => {
 
     try {
-        console.log('123');
-        return res.redirect('http://localhost:3001')
+        return res.redirect('http://localhost:5173')
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: "Internal server error !" })

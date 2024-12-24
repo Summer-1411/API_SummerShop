@@ -49,7 +49,7 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.get('/redirect', (req, res) => {
     // Thực hiện chuyển hướng đến URL mong muốn
-    res.redirect('http://localhost:3001/');
+    res.redirect('http://localhost:5173/');
 });
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
