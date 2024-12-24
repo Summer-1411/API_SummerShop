@@ -29,9 +29,9 @@ class OrderRepository {
                         lte: toDate,  // Điều kiện đến `toDate` (<=)
                     },
                 }),
-                NOT: {
-                    status: 10,  // Loại trừ các bản ghi có status = 10
-                },
+                // NOT: {
+                //     status: 10,  // Loại trừ các bản ghi có status = 10
+                // },
             },
             orderBy: {
                 ['orderDate']: 'desc', // Mặc định sắp xếp theo 'createAt' và theo 'asc'
