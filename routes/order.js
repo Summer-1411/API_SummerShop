@@ -20,10 +20,18 @@ const { validateVoucher, validExpiresTime } = require('../utils');
 //10: Đang chờ thanh toán online
 
 //Khách hàng đặt hàng thì số lượng sản phẩm sẽ giảm đi
-async function updateFiltersQuantities(products) {
+async function updateFiltersQuantities(products, isCheck = false) {
     const connection = await pool.getConnection();
     try {
         for (const product of products) {
+            if (isCheck) {
+                let [checkFilter] = await pool.query(`SELECT * FROM filter where id = ?`, [product.id_filter]);
+                if (checkFilter[0]) {
+                    if (checkFilter[0].quantity < product.quantity) {
+                        throw new Error(`Không đủ số lượng sản phẩm yêu cầu (${product.quantity})!`);
+                    }
+                }
+            }
             await connection.query(
                 'UPDATE filter SET quantity = quantity - ? WHERE id = ?',
                 [product.quantity, product.id_filter]
@@ -43,8 +51,6 @@ async function updateFiltersQuantities(products) {
                     await sendMail(data)
                 }
             }
-
-            console.log(detailProduct[0]);
         }
     } finally {
         connection.release();
@@ -111,7 +117,6 @@ router.post('/', verifyToken, async (req, res) => {
             let sqlUpdate = `UPDATE voucher SET quantity = quantity - ${1}  WHERE id = ${voucher.id} `
             await pool.execute(sqlUpdate)
         }
-        console.log('running');
 
         const statusOrder = paymentMethod === '1' ? 0 : 10 // status = 0, chờ xác nhận đơn thanh toán khi nhận hàng, status = 10 : chờ xử lý payment
         const query = `INSERT INTO orders (id_user, fullname, phone, shipping_address, shipping_method, total_amount, note, payment_method, voucherValue, voucherCode, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -121,15 +126,13 @@ router.post('/', verifyToken, async (req, res) => {
         const orderId = result.insertId
         const products = req.body.products
         const values1 = products.map(item => [orderId, item.id_filter, item.quantity, item.price]);
-        await updateFiltersQuantities(products)
         const sql = 'INSERT INTO order_detail (id_order, id_filter, quantity, price) VALUES ?';
         const [result1] = await pool.query(sql, [values1]);
         if (paymentMethod === '1') {
+            await updateFiltersQuantities(products)
             return res.status(200).json({ success: true, message: 'Đặt hàng thành công' })
-
         }
         else if (paymentMethod === '2') {
-            console.log('check');
             const payload = {
                 orderCode: result.insertId,
                 amount: req.body.total,
@@ -146,8 +149,6 @@ router.post('/', verifyToken, async (req, res) => {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('link', dataResponse.data)
-            //  res.redirect(dataResponse.data)
             return res.status(200).json({ success: true, message: 'Đặt hàng thành công', redirectUrl: dataResponse.data })
 
         }
@@ -309,6 +310,9 @@ router.put("/manager-order", verifyTokenAndAdmin, async (req, res) => {
         const refuse = req.query.refuse;
         //Hoàn tác huỷ
         const undo = req.query.undo;
+
+        //Xác nhận đã thanh toán (trường hợp chuyển khoản mà payos không thực hiện thành công, ví dụ chuyển vượt quá số tiền)
+        const orderPaid = req.query.orderPaid;
         const detailOrder = req.body
         const { id, id_user, fullname, user } = detailOrder
         const { email, username } = user
@@ -337,8 +341,20 @@ router.put("/manager-order", verifyTokenAndAdmin, async (req, res) => {
             //Admin hoàn tác lại thao tác huỷ đơn hàng thì số lươnng sản phẩm sẽ bị giảm đi như khi người dùng đặt
             const [detail] = await pool.query(`SELECT * FROM order_detail WHERE id_order = ?`, [id])
             await updateFiltersQuantities(detail)
+
+
             await pool.query(qr, [0, '', id]);
             return res.status(200).json({ success: true, message: "Đã hoàn tác hành động huỷ đơn" })
+        } else if (orderPaid) {
+            const [detail] = await pool.query(`SELECT * FROM order_detail WHERE id_order = ?`, [id])
+
+            try {
+                await updateFiltersQuantities(detail, true)
+            } catch (error) {
+                return res.status(500).json({ success: false, message: error.message });
+            }
+            await pool.query(query, [0, id]);
+            return res.status(200).json({ success: true, message: "Xác nhận đã thanh toán thành công" })
         }
 
         //Mặc định là xác nhận đơn

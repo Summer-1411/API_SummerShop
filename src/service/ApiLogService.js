@@ -1,14 +1,11 @@
 
 const apiLogRepository = require('../repository/ApiLogRepository');
-const fireBaseTokenRepository = require('../repository/FirebaseTokenRepository');
-
 const vi = require("../messages/message_vi");
 const { sendNotifyToUsers } = require('../firebase/notify');
+const { getTokens } = require('../../utils/firebase');
 class apiLogService {
     static async search(req, res) {
-        const tokensArray = await fireBaseTokenRepository.getAllToken();
-
-        const tokens = tokensArray.map(item => item.token);
+        // const tokens = await getTokens()
 
         // sendNotifyToUsers("Test api", "Check message", tokens)
         try {
