@@ -2,8 +2,8 @@
 const vi = require("../messages/message_vi");
 const productRepository = require('../repository/ProductRepository');
 const filterRepository = require('../repository/FilterRepository');
-const fireBaseTokenRepository = require('../repository/FirebaseTokenRepository');
 const { sendNotifyToUsers } = require("../firebase/notify");
+const { getTokens } = require("../../utils/firebase");
 
 class ProductService {
     static async create(req, res) {
@@ -29,11 +29,8 @@ class ProductService {
                 img: detail.img,
             }));
             await filterRepository.create(productDetailsData);
-
-            const tokensArray = await fireBaseTokenRepository.getAllToken();
-
-            const tokens = tokensArray.map(item => item.token);
-            // sendNotifyToUsers("Sản phẩm mới", `Cửa hàng Summer Shop vừa thêm mới 1 sản phẩm : ${name}`, tokens)
+            const tokens = await getTokens()
+            sendNotifyToUsers("Sản phẩm mới", `Cửa hàng Summer Shop vừa thêm mới 1 sản phẩm : ${name}`, tokens)
 
             return res.status(200).json({ success: true, message: "Thêm mới sản phẩm thành công", product });
         } catch (error) {

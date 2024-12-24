@@ -57,6 +57,18 @@ class ApiLogRepository {
             },
         };
     }
+
+    static async deleteProcess() {
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2); // Lấy thời gian của 2 ngày trước
+        const result = await prisma.api_log.deleteMany({
+            where: {
+                createAt: {
+                    lt: twoDaysAgo, // Điều kiện nhỏ hơn 2 ngày trước
+                },
+            },
+        });
+    }
 }
 
 module.exports = ApiLogRepository;

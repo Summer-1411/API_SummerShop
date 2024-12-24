@@ -2,6 +2,8 @@
 const voucherRepository = require('../repository/VoucherRepository');
 const vi = require('../messages/message_vi');
 const { hasValue } = require("../../utils");
+const { getTokens } = require('../../utils/firebase');
+const { sendNotifyToUsers } = require('../firebase/notify');
 class VoucherService {
     // Tìm kiếm voucher chưa hết hạn
     static async searchNotExpired(req, res) {
@@ -91,6 +93,8 @@ class VoucherService {
                 description: description ? description : undefined,
             }
             const dataResponse = await voucherRepository.create(data);
+            const tokens = await getTokens()
+            sendNotifyToUsers("Mã giảm giá", `Cửa hàng Summer Shop vừa thêm mới mã giảm giá : ${code}`, tokens)
             return res.status(200).json({ success: true, data: dataResponse });
         } catch (error) {
             console.error(error);

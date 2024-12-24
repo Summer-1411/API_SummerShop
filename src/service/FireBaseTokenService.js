@@ -14,13 +14,11 @@ class fireBaseTokenService {
                 userId,
                 createdAt: new Date(),
             }
-            console.log('___________________________________________START_________________________________________________');
-
             if (userId) {
                 await fireBaseTokenRepository.deleteByUserId(userId)
             }
             const tokenRecords = await fireBaseTokenRepository.findByToken(token);
-            console.log('tokenRecords', tokenRecords);
+
 
 
             if (tokenRecords.length > 0) {
@@ -32,11 +30,8 @@ class fireBaseTokenService {
                 }
                 await fireBaseTokenRepository.update(recordToKeep.token, userId);
             } else {
-                // console.log('dataSave', dataSave);
-
                 await fireBaseTokenRepository.create(dataSave);
             }
-            console.log('___________________________________________END_________________________________________________');
 
             return res.status(200).json({ success: true, mesage: "Thành công" });
         } catch (error) {
